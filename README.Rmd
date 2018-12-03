@@ -3,7 +3,8 @@ output: github_document
 ---
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/circbayes)](https://cran.r-project.org/package=circbayes)
-
+[![Travis-CI Build Status](https://travis-ci.org/keesmulder/circbayes.svg?branch=master)](https://travis-ci.org/keesmulder/circbayes)
+[![Coverage Status](https://img.shields.io/codecov/c/github/keesmulder/circbayes/master.svg)](https://codecov.io/github/keesmulder/circbayes?branch=master)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
