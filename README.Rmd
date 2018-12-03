@@ -1,0 +1,31 @@
+---
+output: github_document
+---
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/circbayes)](https://cran.r-project.org/package=circbayes)
+
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# circbayes
+
+The package `circbayes` collects methods for Bayesian analyses of circular data.  
+
+## Installation
+
+You can install circbayes from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("keesmulder/circbayes")
+```
+
+

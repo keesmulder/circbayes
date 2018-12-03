@@ -1,11 +1,17 @@
 Package: circbayes
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Bayesian Analysis of Circular Data
+Version: 0.1.0.9000
+Author: Kees Mulder
+Maintainer: The package maintainer <keestimmulder@gmail.com>
+Description: The package `circbayes` collects methods for Bayesian analyses of circular data.  Included methods are regression, hypothesis testing, mixture models and nonparametric Dirichlet Process Models. 
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: flexcircmix, 
+    bpnreg,
+    circglmbayes,
+    BayesCircIsotropy,
+    dirichletprocess
+Suggests: covr,
+    testthat
