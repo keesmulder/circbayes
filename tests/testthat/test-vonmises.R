@@ -1,5 +1,5 @@
 context("vonmises")
 
 test_that("Von Mises functions work", {
-  expect_equal(2 * 2, 4)
+  expect_length(rvm(10, 5, 2), 10)
 })

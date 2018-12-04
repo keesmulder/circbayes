@@ -12,7 +12,8 @@ Imports: flexcircmix,
     bpnreg,
     circglmbayes,
     BayesCircIsotropy,
-    dirichletprocess
+    dirichletprocess,
+    circular
 Suggests: covr,
     testthat
 URL: https://github.com/keesmulder/circbayes
