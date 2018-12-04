@@ -35,21 +35,20 @@ as.circrad <- function(x) {
 is.circrad <- function(x) inherits(x, "circrad")
 
 
-mean.circrad <- function(x) {
-  atan2(sum(sin(x)), sum(cos(x)))
-
-  circrad()
-}
 
 resultant_length <- function(x) {
   sqrt(sum(sin(x))^2 + sum(cos(x))^2)/length(x)
 }
 
-var.circrad <- function(x) {
+mean.circrad <- function(x, ...) {
+  circrad(atan2(sum(sin(x)), sum(cos(x))))
+}
+
+var.circrad <- function(x, ...) {
   1 - resultant_length(x)
 }
 
-sd.circrad <- function(x) {
+sd.circrad <- function(x, ...) {
   sqrt(-2 * log(resultant_length(x)))
 }
 

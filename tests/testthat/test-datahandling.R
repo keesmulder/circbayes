@@ -25,7 +25,7 @@ test_that("From Package 'Circular'", {
   expect_s3_class(as.circrad(0), "circrad")
   expect_true(is.circrad(cr))
 
-  expect_s3_class(mean(cr), "circrad")
+  expect_is(mean(cr), "circrad")
   expect_is(sd(cr),   "numeric")
   expect_is(var(cr),  "numeric")
   expect_is(resultant_length(cr),  "numeric")
