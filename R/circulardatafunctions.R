@@ -41,7 +41,12 @@ resultant_length <- function(x) {
 }
 
 mean.circrad <- function(x, ...) {
-  circrad(atan2(sum(sin(x)), sum(cos(x))))
+  S <- sum(sin(x))
+  C <- sum(cos(x))
+
+  if (S == 0 && C == 0) return(NA)
+
+  circrad(atan2(S, C))
 }
 
 var.circrad <- function(x, ...) {
