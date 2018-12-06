@@ -17,12 +17,25 @@ dvm <- function(x, mu = 0, kp = 1, log = FALSE) {
   }
 }
 
+print.vonmises_mcmc <- function(x, digits = 3, ...) {
+  print(round(coef(x), digits))
+}
+
+coef.vonmises_mcmc <- coefficients.vonmises_mcmc <- function(x, ...) {
+  x$coef
+}
+
+plot.vonmises_mcmc <- function(x, ...) {
+  params <- cbind(t(x$coef[, 1]), 0, 1)
+
+  colnames(params) <- c("mu_1", "kp_1", "lam_1", "alph_1")
+  flexcircmix::plot_batmix_sample(x$data, param = params)
+}
+
 von_mises_posterior <- function(th, ...) {
 
   # Run intercept-only von Mises regression model
   res <- circglmbayes::circGLM(th = th, ...)
-
-  print(res, "all")
 
   coef_vmpost <- coef(res)
   rownames(coef_vmpost) <- c("mu", "kappa")
