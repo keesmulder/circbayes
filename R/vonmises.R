@@ -34,6 +34,8 @@ plot.vonmises_mcmc <- function(x, ...) {
 
 von_mises_posterior <- function(th, ...) {
 
+  th <- as.circrad(th)
+
   # Run intercept-only von Mises regression model
   res <- circglmbayes::circGLM(th = th, ...)
 

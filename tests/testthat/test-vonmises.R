@@ -13,7 +13,6 @@ test_that("Von Mises functions work", {
 
   expect_is(vm_post, "vonmises_mcmc")
   expect_is(plot(vm_post), "gg")
-
   expect_is(coef(vm_post), "matrix")
 
 
