@@ -30,8 +30,6 @@ test_that("From Package 'Circular'", {
   expect_is(var(cr),  "numeric")
   expect_is(resultant_length(cr),  "numeric")
 
-  cr <- circrad(c(pi/2, -pi/2))
 
-  mean(cr)
 
 })
