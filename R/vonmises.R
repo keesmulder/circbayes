@@ -1,9 +1,9 @@
 
-rvm <- function(n, mu, kp) {
+rvm <- function(n, mu = 0, kp = 1) {
   circrad(circglmbayes::rvmc(n, mu, kp))
 }
 
-logBesselI <- function(x, nu) {
+logBesselI <- function(x, nu = 0) {
   x + log(besselI(x, nu, expon.scaled = TRUE))
 }
 
@@ -16,6 +16,9 @@ dvm <- function(x, mu = 0, kp = 1, log = FALSE) {
     return(exp(logp))
   }
 }
+
+
+
 
 print.vonmises_mcmc <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))
