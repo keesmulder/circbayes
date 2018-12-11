@@ -28,7 +28,7 @@ as.circrad <- function(x) {
     return(circular_to_circrad(x))
   }
 
-  if (inherits(x, "data.frame") {
+  if (inherits(x, "data.frame") || inherits(x, "matrix")) {
     x <- x[, 1]
   }
 
