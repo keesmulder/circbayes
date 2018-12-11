@@ -28,11 +28,65 @@ coef.vonmises_mcmc <- coefficients.vonmises_mcmc <- function(x, ...) {
   x$coef
 }
 
-plot.vonmises_mcmc <- function(x, ...) {
-  params <- cbind(t(x$coef[, 1]), 0, 1)
 
-  colnames(params) <- c("mu_1", "kp_1", "lam_1", "alph_1")
-  flexcircmix::plot_batmix_sample(x$data, param = params)
+
+plot.vonmises_mcmc <- function(x,
+                               polar_coord = TRUE,
+                               add_data    = TRUE,
+                               add_fit     = TRUE,
+                               add_samples = 0,
+                               add_ci      = FALSE,
+                               bins        = 90,
+                               r = 1, ymax = NA,
+                               start = pi/2, direction = -1,
+                               ...) {
+
+  # Basic histogram without samples.
+  p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
+
+  if (add_data) {
+    p <- p +
+      ggplot2::geom_histogram(
+        mapping = ggplot2::aes_string(x = "x", y = "..density.."),
+        fill = grDevices::rgb(.65, .65, .85, .3), col = "white",
+        boundary = -pi, binwidth = 2 * pi / bins)
+  }
+
+
+
+  if (add_samples > 0) {
+    param_mat <- cbind(mu = x$mu_chain,
+                       kp = x$kp_chain)
+    p <- p + geom_mcmc_fun_sample(dvm,
+                                  param_mat = param_mat,
+                                  n_funs = add_samples)
+  }
+
+
+  if (add_ci) {
+    param_mat <- cbind(mu = x$mu_chain,
+                       kp = x$kp_chain)
+    p <- p + geom_mcmc_ci_sample(dvm,
+                                 param_mat = param_mat)
+  }
+
+
+  if (add_fit) {
+    # Add pdf of posterior estimates
+    p <- p + ggplot2::stat_function(fun = dvm,
+                                    args = list(mu = coef(x)[1, 1],
+                                                kp =  coef(x)[2, 1]),
+                                    col = "darkolivegreen3", size = 1)
+  }
+
+
+  if (polar_coord) {
+    p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
+  } else {
+    p <- p + ggplot2::coord_cartesian(...)
+  }
+
+  return(p)
 }
 
 von_mises_posterior <- function(th, ...) {
@@ -69,7 +123,7 @@ von_mises_posterior <- function(th, ...) {
                      thin        = res$thin,
                      burnin      = res$burnin,
                      timeTaken   = res$TimeTaken
-                     )
+  )
 
   class(vmpost_res) <- c("vonmises_mcmc", class(vmpost_res))
 
