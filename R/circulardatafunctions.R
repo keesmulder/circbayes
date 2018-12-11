@@ -26,14 +26,18 @@ as.circrad <- function(x) {
   # Special treatment for 'circular' objects
   if (inherits(x, "circular")) {
     return(circular_to_circrad(x))
-  } else {
-    if (diff(range(x)) > 2 * pi) {
-      warning(paste("Range of input larger than 2 * pi.",
-                    "Make sure the angles are either radians or entered as",
-                    "`circular` objects."))
-    }
-    return(circrad(as.numeric(x)))
   }
+
+  if (inherits(x, "data.frame") {
+    x <- x[, 1]
+  }
+
+  if (diff(range(x)) > 2 * pi) {
+    warning(paste("Range of input larger than 2 * pi.",
+                  "Make sure the angles are either radians or entered as",
+                  "`circular` objects."))
+  }
+  return(circrad(as.numeric(x)))
 }
 
 
