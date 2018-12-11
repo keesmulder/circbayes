@@ -11,7 +11,7 @@ empty_thm <- list(ggplot2::theme_minimal(),
                   ))
 
 # Function that contains the logic to make a plot circular
-ggCircElems <- function(r = 1, ymax = NA) {
+gg_circular_elems <- function(r = 1, ymax = NA) {
   list(
     ggplot2::coord_polar(),
     ggplot2::ylim(-r, ymax),
@@ -21,6 +21,53 @@ ggCircElems <- function(r = 1, ymax = NA) {
 }
 
 
+breaks_circular <- function(units = "degrees", nticks = 4,
+                           digits = 0, limits = c(0, 2 * pi),
+                           scale_function = ggplot2::scale_x_continuous, ...) {
+
+  if (round(abs(limits[1] - limits[2]) - 2*pi, 3) != 0) {
+    stop("Limits must be a range of length 2*pi.")
+  }
+
+  units_categ <- units %in% c("texpi", "texnegpi", "cardinal", "compass")
+
+  if (units_categ & nticks != 4) {
+    warning(paste0("For `units = ", units, "`, setting `nticks` to 4."))
+    nticks <- 4
+  }
+
+  if (units_categ) {
+    if (units == "texpi") {
+      brks   <- seq(0, 2 * pi, length.out = 5)
+      limits <- c(0, 2 * pi)
+    } else if (units == "texnegpi") {
+      brks   <- seq(-pi, pi, length.out = 5)
+      limits <- c(-pi, pi)
+    } else {
+      # These are the options for cardinal or compass directions.
+      brks   <- seq(-pi, 3*pi, length.out = 9)
+    }
+  } else {
+    brks <- seq(limits[1], limits[2], length.out = nticks + 1)[-(nticks + 1)]
+  }
+
+  conv_brks <- switch(
+    units,
+    radians  = round(brks, digits),
+    degrees  = round(brks * 180 / pi, digits),
+    hours    = round(brks * 12 / pi, digits),
+    texpi    = c("$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
+                 "$\\frac{3\\pi}{2}$", "$2\\pi$"),
+    texnegpi = c("$-\\pi$", "$-\\frac{\\pi}{2}$", "$0$",
+                 "$\\frac{\\pi}{2}$", "$\\pi$"),
+    cardinal = c("Right", "Up", "Left", "Down")[c(3:4, 1:4, 1:3)],
+    compass  = c("East", "North", "West", "South")[c(3:4, 1:4, 1:3)])
+
+  list(breaks = brks,
+       labels = conv_brks,
+       limits = limits)
+
+}
 
 #' Circular ggplot scales
 #'
@@ -79,47 +126,12 @@ scale_circular <- function(units = "degrees", nticks = 4,
                            digits = 0, limits = c(0, 2 * pi),
                            scale_function = ggplot2::scale_x_continuous, ...) {
 
-  if (round(abs(limits[1] - limits[2]) - 2*pi, 3) != 0) {
-    stop("Limits must be a range of length 2*pi.")
-  }
+  brk_list <- breaks_circular(units = units, nticks = nticks,
+                              digits = digits, limits = limits)
 
-  units_categ <- units %in% c("texpi", "texnegpi", "cardinal", "compass")
-
-  if (units_categ & nticks != 4) {
-    warning(paste0("For `units = ", units, "`, setting `nticks` to 4."))
-    nticks <- 4
-  }
-
-  if (units_categ) {
-    if (units == "texpi") {
-      brks   <- seq(0, 2 * pi, length.out = 5)
-      limits <- c(0, 2 * pi)
-    } else if (units == "texnegpi") {
-      brks   <- seq(-pi, pi, length.out = 5)
-      limits <- c(-pi, pi)
-    } else {
-      # These are the options for cardinal or compass directions.
-      brks   <- seq(-pi, 3*pi, length.out = 9)
-    }
-  } else {
-    brks <- seq(limits[1], limits[2], length.out = nticks + 1)
-  }
-
-  conv_brks <- switch(
-    units,
-    radians  = round(brks, digits),
-    degrees  = round(brks * 180 / pi, digits),
-    hours    = round(brks * 12 / pi, digits),
-    texpi    = c("$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
-                 "$\\frac{3\\pi}{2}$", "$2\\pi$"),
-    texnegpi = c("$-\\pi$", "$-\\frac{\\pi}{2}$", "$0$",
-                 "$\\frac{\\pi}{2}$", "$\\pi$"),
-    cardinal = c("Right", "Up", "Left", "Down")[c(3:4, 1:4, 1:3)],
-    compass  = c("East", "North", "West", "South")[c(3:4, 1:4, 1:3)])
-
-  scale_function(breaks = brks,
-                 labels = conv_brks,
-                 limits = limits,
+  scale_function(breaks = brk_list$breaks,
+                 labels = brk_list$labels,
+                 limits = brk_list$limits,
                  ...)
 }
 
@@ -137,226 +149,278 @@ scale_y_circular <- function(...) {
 
 
 
+# Function that contains the logic to make a plot clockular
+gg_inside_labels <- function(units = "degrees", nticks = 4,
+                             digits = 0, limits = c(0, 2 * pi),
+                             r = 1, labdist = .12, ymax = NA, zoom = 1) {
 
-#' Plot a mixture of Batschelet type distributions.
-#'
-#' @param x Optional data vector of angles in radians to plot a histogram of.
-#' @param params A matrix of parameters.
-#' @param dbat_fun A function; the Batschelet function to use. Defaults to the
-#'   Inverse Batschelet Function.
-#' @param bins Integer; The number of bins to use in the optional histogram.
-#' @param hist_alpha Numeric; The alpha value of the histogram of the
-#'   data.
-#' @param res Integer; The number of points at which to evaluate the density
-#'   function.
-#'
-#' @return A ggplot.
-#' @export
-#'
-#' @examples
-#' plot_batmixfit(params = cbind(mu = c(-pi/2, 0, pi/2, pi), kp = 4,
-#'                               lam = c(-.9, .2, .8, 0), alph = .25))
-#'
-plot_batmixfit <- function(x, params, dbat_fun = dpowbat, bins = 100, res = 400,
-                           hist_alpha = .3) {
+  brk_list <- breaks_circular(units = units, nticks = nticks,
+                              digits = digits, limits = limits)
 
+  pos <- brk_list$breaks
+  nms <- brk_list$labels
 
-  # Initialize plot.
-  if (missing(x)) {
-    p <- ggplot2::ggplot(data.frame(x = c(-pi, pi)))
-  } else {
-    p <- ggplot2::ggplot(data.frame(x = force_neg_pi_pi(x)))
-  }
+  list(ggplot2::coord_polar(),
+       ggplot2::xlim(limits[1], limits[2]),
+       ggplot2::geom_text(data = data.frame(x = pos, y = -labdist * r, label = nms),
+                          ggplot2::aes_string(x = 'x', y = 'y', label = 'label')),
+       ggplot2::geom_segment(data = data.frame(x = pos, xend = pos,
+                                               y = 0, yend = -.03 * r),
+                             ggplot2::aes_string(x = 'x', y = 'y', xend = 'xend', yend = 'yend')),
+       ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                      plot.margin = ggplot2::unit(c(1,1,1,1) * -zoom, "cm")))
+}
 
-  p <- p +
-    ggplot2::xlim(-pi, pi) +
-    ggplot2::ylim(c(0, NA)) +
-    ggplot2::coord_cartesian(expand = TRUE) +
-    ggplot2::theme_bw()
-
-
-  # If we don't have data given as well, return only the pdfs. Otherwise, add a
-  # histogram.
-  if (!missing(x)) {
-    p <- p +
-      ggplot2::geom_histogram(
-        mapping = ggplot2::aes_string(x = "x", y = "..density.."),
-        fill = grDevices::rgb(.65, .65, .85, hist_alpha), col = "white",
-        boundary = -pi, binwidth = 2*pi / bins)
-  }
-
-
-  # Add the mixture density.
-  p <- p +
-    ggplot2::stat_function(fun = dbatmix_pmat,
-                           args = list(pmat = params, dbat_fun = dbat_fun),
-                           n = res,
-                           colour = grDevices::rgb(.35, .35, .35, .8),
-                           lwd = 1.2)
-
-
-  # Add the separate densities.
-  n_comp <- nrow(params)
-
-  # Force evaluation of the functions parameters, because otherwise lazy
-  # evaluation will only cause us to plot the last function.
-  funlist <- lapply(1:n_comp, function(compi) {
-    function(x) params[compi, 'alph'] * dbat_fun(x,
-                                                 mu = params[compi, 'mu'],
-                                                 kp = params[compi, 'kp'],
-                                                 lam = params[compi, 'lam'])})
-
-  if (n_comp < 10) {
-    palette <- RColorBrewer::brewer.pal(max(n_comp, 3), "Set1")
-  } else {
-    palette <- RColorBrewer::brewer.pal(n_comp, "RdYlBu")
-  }
-
-  # Next, add each separate pdf.
-  for (compi in 1:n_comp) {
-    p <- p + ggplot2::stat_function(fun = funlist[[compi]],
-                                    col = palette[compi],
-                                    lwd = .8, n = res)
-  }
-  p
+ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
+  p +
+    scale_x_circular(units = "hours", nticks = 24,
+                     minor_breaks = 1:4 * pi / 2) +
+    ylim(0, NA) + coord_cartesian(expand = FALSE) +
+    theme_classic() +
+    xlab("") +
+    ylab("Density") +
+    theme(legend.position = 'none')
 }
 
 
-#' plot_movMF_as_batmix
+
+
+
+
+
+
+
+
+
+
 #'
-#' Plot a result from movMF using the Batschelet mixture plotting functions.
 #'
-#' @param m A movMF results object.
-#' @param ... Additional arguments to be passed to \code{plot_batmixfit}.
 #'
-#' @return A ggplot.
-#' @export
 #'
-#' @examples
 #'
-#' \dontrun{
-#'   movMF_model <- movMF(cbind(runif(100, -1, 1), runif(100, -1, 1), 2), k = 4)
-#'   plot_movMF_as_batmix(movMF_model)
+#'
+#'
+#'
+#'
+#' #' Plot a mixture of Batschelet type distributions.
+#' #'
+#' #' @param x Optional data vector of angles in radians to plot a histogram of.
+#' #' @param params A matrix of parameters.
+#' #' @param dbat_fun A function; the Batschelet function to use. Defaults to the
+#' #'   Inverse Batschelet Function.
+#' #' @param bins Integer; The number of bins to use in the optional histogram.
+#' #' @param hist_alpha Numeric; The alpha value of the histogram of the
+#' #'   data.
+#' #' @param res Integer; The number of points at which to evaluate the density
+#' #'   function.
+#' #'
+#' #' @return A ggplot.
+#' #' @export
+#' #'
+#' #' @examples
+#' #' plot_batmixfit(params = cbind(mu = c(-pi/2, 0, pi/2, pi), kp = 4,
+#' #'                               lam = c(-.9, .2, .8, 0), alph = .25))
+#' #'
+#' plot_batmixfit <- function(x, params, dbat_fun = dpowbat, bins = 100, res = 400,
+#'                            hist_alpha = .3) {
+#'
+#'
+#'   # Initialize plot.
+#'   if (missing(x)) {
+#'     p <- ggplot2::ggplot(data.frame(x = c(-pi, pi)))
+#'   } else {
+#'     p <- ggplot2::ggplot(data.frame(x = force_neg_pi_pi(x)))
+#'   }
+#'
+#'   p <- p +
+#'     ggplot2::xlim(-pi, pi) +
+#'     ggplot2::ylim(c(0, NA)) +
+#'     ggplot2::coord_cartesian(expand = TRUE) +
+#'     ggplot2::theme_bw()
+#'
+#'
+#'   # If we don't have data given as well, return only the pdfs. Otherwise, add a
+#'   # histogram.
+#'   if (!missing(x)) {
+#'     p <- p +
+#'       ggplot2::geom_histogram(
+#'         mapping = ggplot2::aes_string(x = "x", y = "..density.."),
+#'         fill = grDevices::rgb(.65, .65, .85, hist_alpha), col = "white",
+#'         boundary = -pi, binwidth = 2*pi / bins)
+#'   }
+#'
+#'
+#'   # Add the mixture density.
+#'   p <- p +
+#'     ggplot2::stat_function(fun = dbatmix_pmat,
+#'                            args = list(pmat = params, dbat_fun = dbat_fun),
+#'                            n = res,
+#'                            colour = grDevices::rgb(.35, .35, .35, .8),
+#'                            lwd = 1.2)
+#'
+#'
+#'   # Add the separate densities.
+#'   n_comp <- nrow(params)
+#'
+#'   # Force evaluation of the functions parameters, because otherwise lazy
+#'   # evaluation will only cause us to plot the last function.
+#'   funlist <- lapply(1:n_comp, function(compi) {
+#'     function(x) params[compi, 'alph'] * dbat_fun(x,
+#'                                                  mu = params[compi, 'mu'],
+#'                                                  kp = params[compi, 'kp'],
+#'                                                  lam = params[compi, 'lam'])})
+#'
+#'   if (n_comp < 10) {
+#'     palette <- RColorBrewer::brewer.pal(max(n_comp, 3), "Set1")
+#'   } else {
+#'     palette <- RColorBrewer::brewer.pal(n_comp, "RdYlBu")
+#'   }
+#'
+#'   # Next, add each separate pdf.
+#'   for (compi in 1:n_comp) {
+#'     p <- p + ggplot2::stat_function(fun = funlist[[compi]],
+#'                                     col = palette[compi],
+#'                                     lwd = .8, n = res)
+#'   }
+#'   p
 #' }
 #'
-plot_movMF_as_batmix <- function(m, ...) {
-  pmat <- invbatmix_pmat_from_movMF(m)
-  plot_batmixfit(params = pmat, ...)
-}
-
-
-
-
-#' Plot a Batschelet-type mixture model
 #'
-#' @param x A \code{batmixmod} object.
-#' @param ... Additional arguments to be passed to \code{plot_batmixfit}.
+#' #' plot_movMF_as_batmix
+#' #'
+#' #' Plot a result from movMF using the Batschelet mixture plotting functions.
+#' #'
+#' #' @param m A movMF results object.
+#' #' @param ... Additional arguments to be passed to \code{plot_batmixfit}.
+#' #'
+#' #' @return A ggplot.
+#' #' @export
+#' #'
+#' #' @examples
+#' #'
+#' #' \dontrun{
+#' #'   movMF_model <- movMF(cbind(runif(100, -1, 1), runif(100, -1, 1), 2), k = 4)
+#' #'   plot_movMF_as_batmix(movMF_model)
+#' #' }
+#' #'
+#' plot_movMF_as_batmix <- function(m, ...) {
+#'   pmat <- invbatmix_pmat_from_movMF(m)
+#'   plot_batmixfit(params = pmat, ...)
+#' }
 #'
-#' @return A \code{ggplot}.
-#' @export
 #'
-#' @examples
-#' x <- rinvbatmix(50)
-#' plot(fitbatmix(x, method = "EM"))
 #'
-plot.batmixmod <- function(x, ...) {
-  plot_batmixfit(x$x, params = x$estimates, ...)
-}
-
-
-
-#' Plot a sample of Batschelet mixture parameter sets.
 #'
-#' @param x An optional dataset of angles to be plotted as a histogram.
-#' @param param A matrix of parameter sets.
-#' @param dbat_fun A function; The pdf of the chosen Batschelet distribution.
-#' @param bins The number of bins to draw in the histogram.
-#' @param res Number of points at which to evaluate the functions.
-#' @param orderColor Logical; If \code{TRUE}, plotted pdfs get darker and more
-#'   red as they were sampled later.
-#' @param plot_n Integer; the number of parameter rows to sample from the matrix
-#'   \code{param}. This is intended for MCMC for example, where we can take a
-#'   subsample of the parameter matrix to plot for speed.
-#' @param hist_alpha Numeric; The alpha value of the histogram of the
-#'   data.
-#' @param dens_darkness Numeric; Higher numbers result in less transparent
-#'   densities plotted.
+#' #' Plot a Batschelet-type mixture model
+#' #'
+#' #' @param x A \code{batmixmod} object.
+#' #' @param ... Additional arguments to be passed to \code{plot_batmixfit}.
+#' #'
+#' #' @return A \code{ggplot}.
+#' #' @export
+#' #'
+#' #' @examples
+#' #' x <- rinvbatmix(50)
+#' #' plot(fitbatmix(x, method = "EM"))
+#' #'
+#' plot.batmixmod <- function(x, ...) {
+#'   plot_batmixfit(x$x, params = x$estimates, ...)
+#' }
 #'
-#' @return A ggplot.
-#' @export
 #'
-#' @examples
-#' x <- rinvbatmix(50)
-#' mod <- fitbatmix(x, method = "bayes",  Q = 10)
 #'
-#' plot_batmix_sample(x, mod$mcmc_sample, dens_darkness = 5)
+#' #' Plot a sample of Batschelet mixture parameter sets.
+#' #'
+#' #' @param x An optional dataset of angles to be plotted as a histogram.
+#' #' @param param A matrix of parameter sets.
+#' #' @param dbat_fun A function; The pdf of the chosen Batschelet distribution.
+#' #' @param bins The number of bins to draw in the histogram.
+#' #' @param res Number of points at which to evaluate the functions.
+#' #' @param orderColor Logical; If \code{TRUE}, plotted pdfs get darker and more
+#' #'   red as they were sampled later.
+#' #' @param plot_n Integer; the number of parameter rows to sample from the matrix
+#' #'   \code{param}. This is intended for MCMC for example, where we can take a
+#' #'   subsample of the parameter matrix to plot for speed.
+#' #' @param hist_alpha Numeric; The alpha value of the histogram of the
+#' #'   data.
+#' #' @param dens_darkness Numeric; Higher numbers result in less transparent
+#' #'   densities plotted.
+#' #'
+#' #' @return A ggplot.
+#' #' @export
+#' #'
+#' #' @examples
+#' #' x <- rinvbatmix(50)
+#' #' mod <- fitbatmix(x, method = "bayes",  Q = 10)
+#' #'
+#' #' plot_batmix_sample(x, mod$mcmc_sample, dens_darkness = 5)
+#' #'
+#' plot_batmix_sample <- function(x, param, dbat_fun = dinvbat,
+#'                                plot_n = nrow(param),
+#'                                hist_alpha = .3, dens_darkness = 20,
+#'                                bins = 100, res = 400, orderColor = FALSE) {
 #'
-plot_batmix_sample <- function(x, param, dbat_fun = dinvbat,
-                               plot_n = nrow(param),
-                               hist_alpha = .3, dens_darkness = 20,
-                               bins = 100, res = 400, orderColor = FALSE) {
-
-  # Change to matrix if needed.
-  if (is.vector(param)) param <- t(param)
-
-  # Initialize plot.
-  if (missing(x)) {
-    p <- ggplot2::ggplot(data.frame(x = c(-pi, pi)))
-  } else {
-    p <- ggplot2::ggplot(data.frame(x))
-  }
-
-  p <- p +
-    ggplot2::xlim(-pi, pi) +
-    ggplot2::ylim(c(0, NA)) +
-    ggplot2::coord_cartesian(expand = TRUE) +
-    ggplot2::theme_bw()
-
-
-  # If we don't have data given as well, return only the pdfs. Otherwise, add a
-  # histogram.
-  if (!missing(x)) {
-    p <- p +
-      ggplot2::geom_histogram(mapping = ggplot2::aes_string(x = "x",
-                                                            y = "..density.."),
-                              fill = grDevices::rgb(.65, .65, .85, hist_alpha),
-                              col = "white",
-                              boundary = -pi, binwidth = 2*pi / bins)
-
-    # If there are no parameters given, just return the histogram.
-    if (identical(param, NA)) return(p)
-  }
-
-
-  # Remove some rows if we don't plot every row of param.
-  param <- param[round(seq(1, nrow(param),
-                           length.out = plot_n)), , drop = FALSE]
-
-  mu_mat   <- param[, grep("mu_[0-9]",   colnames(param)), drop = FALSE]
-  kp_mat   <- param[, grep("kp_[0-9]",   colnames(param)), drop = FALSE]
-  lam_mat  <- param[, grep("lam_[0-9]",  colnames(param)), drop = FALSE]
-  alph_mat <- param[, grep("alph_[0-9]", colnames(param)), drop = FALSE]
-
-  n_comp <- ncol(mu_mat)
-
-  if (orderColor) ordseq <- seq(0, 1, 0.6/plot_n)
-
-
-  for (i in 1:plot_n) {
-    suppressWarnings(
-      p <- p + ggplot2::stat_function(
-        fun = dbatmix,
-        args = list(mus      = mu_mat[i, ],
-                    kps      = kp_mat[i, ],
-                    lams     = lam_mat[i, ],
-                    alphs    = alph_mat[i, ],
-                    dbat_fun = dbat_fun),
-        col = grDevices::rgb(ifelse(orderColor, ordseq[i], 0.2),
-                             0.2, 0.2, min(1, dens_darkness/plot_n)),
-        n = res)
-    )
-  }
-  p
-}
-
-
+#'   # Change to matrix if needed.
+#'   if (is.vector(param)) param <- t(param)
+#'
+#'   # Initialize plot.
+#'   if (missing(x)) {
+#'     p <- ggplot2::ggplot(data.frame(x = c(-pi, pi)))
+#'   } else {
+#'     p <- ggplot2::ggplot(data.frame(x))
+#'   }
+#'
+#'   p <- p +
+#'     ggplot2::xlim(-pi, pi) +
+#'     ggplot2::ylim(c(0, NA)) +
+#'     ggplot2::coord_cartesian(expand = TRUE) +
+#'     ggplot2::theme_bw()
+#'
+#'
+#'   # If we don't have data given as well, return only the pdfs. Otherwise, add a
+#'   # histogram.
+#'   if (!missing(x)) {
+#'     p <- p +
+#'       ggplot2::geom_histogram(mapping = ggplot2::aes_string(x = "x",
+#'                                                             y = "..density.."),
+#'                               fill = grDevices::rgb(.65, .65, .85, hist_alpha),
+#'                               col = "white",
+#'                               boundary = -pi, binwidth = 2*pi / bins)
+#'
+#'     # If there are no parameters given, just return the histogram.
+#'     if (identical(param, NA)) return(p)
+#'   }
+#'
+#'
+#'   # Remove some rows if we don't plot every row of param.
+#'   param <- param[round(seq(1, nrow(param),
+#'                            length.out = plot_n)), , drop = FALSE]
+#'
+#'   mu_mat   <- param[, grep("mu_[0-9]",   colnames(param)), drop = FALSE]
+#'   kp_mat   <- param[, grep("kp_[0-9]",   colnames(param)), drop = FALSE]
+#'   lam_mat  <- param[, grep("lam_[0-9]",  colnames(param)), drop = FALSE]
+#'   alph_mat <- param[, grep("alph_[0-9]", colnames(param)), drop = FALSE]
+#'
+#'   n_comp <- ncol(mu_mat)
+#'
+#'   if (orderColor) ordseq <- seq(0, 1, 0.6/plot_n)
+#'
+#'
+#'   for (i in 1:plot_n) {
+#'     suppressWarnings(
+#'       p <- p + ggplot2::stat_function(
+#'         fun = dbatmix,
+#'         args = list(mus      = mu_mat[i, ],
+#'                     kps      = kp_mat[i, ],
+#'                     lams     = lam_mat[i, ],
+#'                     alphs    = alph_mat[i, ],
+#'                     dbat_fun = dbat_fun),
+#'         col = grDevices::rgb(ifelse(orderColor, ordseq[i], 0.2),
+#'                              0.2, 0.2, min(1, dens_darkness/plot_n)),
+#'         n = res)
+#'     )
+#'   }
+#'   p
+#' }
+#'
+#'
