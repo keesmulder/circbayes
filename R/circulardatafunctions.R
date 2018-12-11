@@ -27,7 +27,7 @@ as.circrad <- function(x) {
   if (inherits(x, "circular")) {
     return(circular_to_circrad(x))
   } else {
-    if (diff(range(x))) {
+    if (diff(range(x)) > 2 * pi) {
       warning(paste("Range of input larger than 2 * pi.",
                     "Make sure the angles are either radians or entered as",
                     "`circular` objects."))
