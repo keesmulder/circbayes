@@ -11,9 +11,9 @@ empty_thm <- list(ggplot2::theme_minimal(),
                   ))
 
 # Function that contains the logic to make a plot circular
-gg_circular_elems <- function(r = 1, ymax = NA) {
+gg_circular_elems <- function(r = 1, ymax = NA, start = pi/2, direction = -1) {
   list(
-    ggplot2::coord_polar(),
+    ggplot2::coord_polar(start = start, direction = direction),
     ggplot2::ylim(-r, ymax),
     ggplot2::geom_hline(yintercept = 0, col = "gray20"),
     empty_thm
@@ -23,6 +23,7 @@ gg_circular_elems <- function(r = 1, ymax = NA) {
 
 breaks_circular <- function(units = "degrees", nticks = 4,
                            digits = 0, limits = c(0, 2 * pi),
+                           positive_labels = TRUE,
                            scale_function = ggplot2::scale_x_continuous, ...) {
 
   if (round(abs(limits[1] - limits[2]) - 2*pi, 3) != 0) {
@@ -51,6 +52,10 @@ breaks_circular <- function(units = "degrees", nticks = 4,
     brks <- seq(limits[1], limits[2], length.out = nticks + 1)[-(nticks + 1)]
   }
 
+  # If desired, set absolute values for the labels.
+  orig_brks <- brks
+  if (positive_labels) brks <- brks %% (2*pi)
+
   conv_brks <- switch(
     units,
     radians  = round(brks, digits),
@@ -63,7 +68,7 @@ breaks_circular <- function(units = "degrees", nticks = 4,
     cardinal = c("Right", "Up", "Left", "Down")[c(3:4, 1:4, 1:3)],
     compass  = c("East", "North", "West", "South")[c(3:4, 1:4, 1:3)])
 
-  list(breaks = brks,
+  list(breaks = orig_brks,
        labels = conv_brks,
        limits = limits)
 
@@ -124,10 +129,12 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #'
 scale_circular <- function(units = "degrees", nticks = 4,
                            digits = 0, limits = c(0, 2 * pi),
+                           positive_labels = TRUE,
                            scale_function = ggplot2::scale_x_continuous, ...) {
 
   brk_list <- breaks_circular(units = units, nticks = nticks,
-                              digits = digits, limits = limits)
+                              digits = digits, limits = limits,
+                              positive_labels = positive_labels)
 
   scale_function(breaks = brk_list$breaks,
                  labels = brk_list$labels,
@@ -152,16 +159,17 @@ scale_y_circular <- function(...) {
 # Function that contains the logic to make a plot clockular
 gg_inside_labels <- function(units = "degrees", nticks = 4,
                              digits = 0, limits = c(0, 2 * pi),
+                             positive_labels = TRUE,
                              r = 1, labdist = .12, ymax = NA, zoom = 1) {
 
   brk_list <- breaks_circular(units = units, nticks = nticks,
-                              digits = digits, limits = limits)
+                              digits = digits, limits = limits,
+                              positive_labels = positive_labels)
 
   pos <- brk_list$breaks
   nms <- brk_list$labels
 
-  list(ggplot2::coord_polar(),
-       ggplot2::xlim(limits[1], limits[2]),
+  list(ggplot2::xlim(limits[1], limits[2]),
        ggplot2::geom_text(data = data.frame(x = pos, y = -labdist * r, label = nms),
                           ggplot2::aes_string(x = 'x', y = 'y', label = 'label')),
        ggplot2::geom_segment(data = data.frame(x = pos, xend = pos,
