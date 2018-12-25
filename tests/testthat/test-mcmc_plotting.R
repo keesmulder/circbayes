@@ -2,7 +2,7 @@ context("Plotting functions for mcmc output")
 
 
 # Test data
-dat       <- data.frame(x = rvm(100) %% (2*pi))
+dat       <- data.frame(x = rvm(100) %% (2*pi) - pi)
 sam       <- von_mises_posterior(dat, Q = 100)
 param_mat <- cbind(sam$mu_chain, sam$kp_chain)
 
@@ -54,7 +54,7 @@ test_that("Circular plotting works", {
     gg_inside_labels(units = "radians", digits = 2,
                      nticks = 8, limits = c(-pi, pi))
 
-  expect_is(p, "gg")
+  expect_is(p , "gg")
   expect_is(p2, "gg")
   expect_is(p3, "gg")
   expect_is(p4, "gg")
