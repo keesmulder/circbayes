@@ -59,6 +59,7 @@ plot.vonmises_mcmc <- function(x,
                        kp = x$kp_chain)
     p <- p + geom_mcmc_fun_sample(dvm,
                                   param_mat = param_mat,
+                                  alpha = .1,
                                   n_funs = add_samples)
   }
 
@@ -67,7 +68,8 @@ plot.vonmises_mcmc <- function(x,
     param_mat <- cbind(mu = x$mu_chain,
                        kp = x$kp_chain)
     p <- p + geom_mcmc_ci_sample(dvm,
-                                 param_mat = param_mat)
+                                 param_mat = param_mat,
+                                 linetype = "dashed")
   }
 
 
@@ -76,7 +78,7 @@ plot.vonmises_mcmc <- function(x,
     p <- p + ggplot2::stat_function(fun = dvm,
                                     args = list(mu = coef(x)[1, 1],
                                                 kp =  coef(x)[2, 1]),
-                                    col = "darkolivegreen3", size = 1)
+                                    size = 1)
   }
 
 
@@ -89,7 +91,6 @@ plot.vonmises_mcmc <- function(x,
   return(p)
 }
 
-von_mises_posterior <- function(th, ...) {
 
   th <- as.circrad(th)
 
