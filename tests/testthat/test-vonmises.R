@@ -29,10 +29,23 @@ test_that("Von Mises functions work", {
   # Check prior usage
   vm_post <- von_mises_posterior(th, prior = c(2, 10, 15))
 
-
   expect_is(vm_post, "vonmises_mcmc")
   expect_is(plot(vm_post), "gg")
   expect_is(coef(vm_post), "matrix")
 
+})
+
+
+
+
+test_that("Von Mises plotting works", {
+
+  th <- rvm(100, 5, 6)
+
+  vm_post <- von_mises_posterior(th)
+
+  expect_is(plot(vm_post, polar_coord = FALSE), "gg")
+  expect_is(plot(vm_post, add_ci = TRUE), "gg")
+  plot(vm_post, add_samples = TRUE)
 
 })

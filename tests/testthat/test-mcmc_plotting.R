@@ -61,3 +61,4 @@ test_that("Circular plotting works", {
   expect_is(p5, "gg")
 
 })
+

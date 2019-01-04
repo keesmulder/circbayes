@@ -28,18 +28,44 @@ coef.vonmises_mcmc <- coefficients.vonmises_mcmc <- function(x, ...) {
   x$coef
 }
 
+get_param_mat.vonmises_mcmc <- function(x) {
+  cbind(mu = x$mu_chain,
+        kp = x$kp_chain)
+}
 
+plot.vonmises_mcmc <- function(x, ...) {
+  plot_circbayes(x, ...)
+}
 
-plot.vonmises_mcmc <- function(x,
-                               polar_coord = TRUE,
-                               add_data    = TRUE,
-                               add_fit     = TRUE,
-                               add_samples = 0,
-                               add_ci      = FALSE,
-                               bins        = 90,
-                               r = 1, ymax = NA,
-                               start = pi/2, direction = -1,
-                               ...) {
+#' Plot a von mises
+#'
+#' @param x
+#' @param polar_coord
+#' @param add_data
+#' @param add_fit
+#' @param n_samples
+#' @param add_ci
+#' @param bins
+#' @param r
+#' @param ymax
+#' @param start
+#' @param direction
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_circbayes <- function(x,
+                           polar_coord = TRUE,
+                           add_data    = TRUE,
+                           add_fit     = TRUE,
+                           n_samples   = 0,
+                           add_ci      = FALSE,
+                           bins        = 90,
+                           r = 1, ymax = NA,
+                           start = pi/2, direction = -1,
+                           ...) {
 
   # Basic histogram without samples.
   p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
@@ -54,19 +80,17 @@ plot.vonmises_mcmc <- function(x,
 
 
 
-  if (add_samples > 0) {
-    param_mat <- cbind(mu = x$mu_chain,
-                       kp = x$kp_chain)
+  if (n_samples > 0) {
+    param_mat <- get_param_mat(x)
     p <- p + geom_mcmc_fun_sample(dvm,
                                   param_mat = param_mat,
                                   alpha = .1,
-                                  n_funs = add_samples)
+                                  n_funs = n_samples)
   }
 
 
   if (add_ci) {
-    param_mat <- cbind(mu = x$mu_chain,
-                       kp = x$kp_chain)
+    param_mat <- get_param_mat(x)
     p <- p + geom_mcmc_ci_sample(dvm,
                                  param_mat = param_mat,
                                  linetype = "dashed")

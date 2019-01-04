@@ -10,6 +10,20 @@ param_version_of_fun <- function(fun) {
 }
 
 
+#' Obtain a matrix of parameters from a circular Bayesian object
+#'
+#' Generic method to obtain parameters from a circular Bayesian model.
+#'
+#' @param x Object containing a fit model with MCMC samples.
+#'
+#' @return A matrix of parameters, with as columns different parameters and as
+#'   rows different iterations.
+#' @export
+get_param_mat <- function(x) {
+  UseMethod("get_param_mat", x)
+}
+
+
 # Return sample of pdfs on x grid
 geom_mcmc_fun_sample <- function(fun, param_mat, n_funs = 100,
                                  col = grDevices::rgb(0.5, 0.5, 0.57, .25), ...) {
@@ -25,7 +39,7 @@ geom_mcmc_fun_sample <- function(fun, param_mat, n_funs = 100,
   if (n_funs > n_param) stop("Can not add more plots than samples.")
   if (n_funs > 500) warning("Plotting many function lines might take a long time.")
 
-  idx <- sample(1:n_param, n_funs)
+  idx <- sample(1:n_param, size = n_funs)
 
   apply(param_mat[idx, , drop = FALSE], 1, function(x) {
     return(ggplot2::stat_function(fun = fun, args = list(params = x),
