@@ -91,11 +91,12 @@ plot.vonmises_mcmc <- function(x,
   return(p)
 }
 
+von_mises_posterior <- function(th, prior = c(0, 0, 0), ...) {
 
   th <- as.circrad(th)
 
   # Run intercept-only von Mises regression model
-  res <- circglmbayes::circGLM(th = th, ...)
+  res <- circglmbayes::circGLM(th = th, conj_prior = prior, ...)
 
   coef_vmpost <- coef(res)
   rownames(coef_vmpost) <- c("mu", "kappa")

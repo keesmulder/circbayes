@@ -26,4 +26,13 @@ test_that("Von Mises functions work", {
                  start = 0, direction = 1, units = "hours"), "gg")
 
 
+  # Check prior usage
+  vm_post <- von_mises_posterior(th, prior = c(2, 10, 15))
+
+
+  expect_is(vm_post, "vonmises_mcmc")
+  expect_is(plot(vm_post), "gg")
+  expect_is(coef(vm_post), "matrix")
+
+
 })
