@@ -194,6 +194,86 @@ ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
 
 
 
+#' Plot a circular model.
+#'
+#' @param x
+#' @param polar_coord
+#' @param add_data
+#' @param add_fit
+#' @param n_samples
+#' @param add_ci
+#' @param bins
+#' @param r
+#' @param ymax
+#' @param start
+#' @param direction
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+plot_circbayes <- function(x,
+                           pdf_fun     = dvm,
+                           polar_coord = TRUE,
+                           add_data    = TRUE,
+                           add_fit     = TRUE,
+                           n_samples   = 0,
+                           add_ci      = FALSE,
+                           bins        = 90,
+                           r = 1, ymax = NA,
+                           start       = pi/2,
+                           direction   = -1,
+                           ...) {
+
+  # Basic histogram without samples.
+  p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
+
+  if (add_data) {
+    p <- p +
+      ggplot2::geom_histogram(
+        mapping = ggplot2::aes_string(x = "x", y = "..density.."),
+        fill = grDevices::rgb(.65, .65, .85, .3), col = "white",
+        boundary = -pi, binwidth = 2 * pi / bins)
+  }
+
+
+
+  if (n_samples > 0) {
+    param_mat <- posterior_samples(x)
+    p <- p + geom_mcmc_fun_sample(dvm,
+                                  param_mat = param_mat,
+                                  alpha = .1,
+                                  n_funs = n_samples)
+  }
+
+
+  if (add_ci) {
+    param_mat <- posterior_samples(x)
+    p <- p + geom_mcmc_ci_sample(dvm,
+                                 param_mat = param_mat,
+                                 linetype = "dashed")
+  }
+
+
+  if (add_fit) {
+    # Add pdf of posterior estimates
+    p <- p + ggplot2::stat_function(fun = dvm,
+                                    args = list(mu = coef(x)[1, 1],
+                                                kp =  coef(x)[2, 1]),
+                                    size = 1)
+  }
+
+
+  if (polar_coord) {
+    p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
+  } else {
+    p <- p + ggplot2::coord_cartesian(...)
+  }
+
+  return(p)
+}
 
 
 
