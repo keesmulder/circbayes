@@ -1,48 +1,43 @@
-context("Von Mises distribution")
+context("Von Mises")
 
 
-
-test_that("Von Mises functions work", {
-  expect_length(rvm(10, 5, 2), 10)
-
+test_that("Von Mises functions", {
   expect_equal(logBesselI(3, 0), log(besselI(3, 0)))
   expect_equal(integrate(dvm, 0, 2*pi)$value, 1)
+})
 
-  th <- rvm(100, 5, 6)
+th <- rvm(20, 5, 6)
 
-  vm_post <- von_mises_posterior(th)
+test_that("Random generation", {
+  expect_length(th, 20)
+  expect_is(th, "numeric")
+})
 
-  expect_is(vm_post, "vonmises_mcmc")
-  expect_is(plot(vm_post), "gg")
-  expect_is(coef(vm_post), "matrix")
+mod  <- vm_posterior(th, niter = 10)
+mod2 <- vm_posterior(th, niter = 10, prior = c(2, 10, 15))
+
+test_that("Posterior sampling", {
+
+  expect_is(mod,        "vm_posterior_mod")
+  expect_is(plot(mod),  "gg")
+  expect_is(coef(mod),  "matrix")
+
+  expect_is(mod2,       "vm_posterior_mod")
+  expect_is(plot(mod2), "gg")
+  expect_is(coef(mod2), "matrix")
+})
 
 
-  expect_is(plot(vm_post), "gg")
-  expect_is(plot(vm_post, add_ci = TRUE), "gg")
-  expect_is(plot(vm_post, add_samples = 10, polar_coord = FALSE), "gg")
-  expect_is(plot(vm_post, add_fit = FALSE, add_data = FALSE), "gg")
+test_that("Plotting", {
+
+  expect_is(plot(mod),                                        "gg")
+  expect_is(plot(mod, add_ci = TRUE),                         "gg")
+  expect_is(plot(mod, add_samples = 10, polar_coord = FALSE), "gg")
+  expect_is(plot(mod, add_fit = FALSE, add_data = FALSE),     "gg")
 
   # Clock data
-  expect_is(plot(vm_post, add_fit = FALSE, add_data = TRUE,
-                 start = 0, direction = 1, units = "hours"), "gg")
-
-
-  # Check prior usage
-  vm_post <- vm_posterior(th, prior = c(2, 10, 15))
-
-  expect_is(vm_post, "vonmises_mcmc")
-  expect_is(plot(vm_post), "gg")
-  expect_is(coef(vm_post), "matrix")
-
+  expect_is(plot(mod, add_fit = FALSE, add_data = TRUE,
+                 start = 0, direction = 1, units = "hours"),  "gg")
 })
 
 
-
-
-test_that("Von Mises plotting works", {
-
-  expect_is(plot(mod, polar_coord = FALSE), "gg")
-  expect_is(plot(mod, add_ci = TRUE),       "gg")
-  expect_is(plot(mod, add_samples = TRUE),  "gg")
-
-})

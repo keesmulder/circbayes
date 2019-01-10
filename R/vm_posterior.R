@@ -38,12 +38,13 @@ plot.vm_posterior_mod <- function(x, ...) {
 }
 
 
-vm_posterior <- function(th, prior = c(0, 0, 0), ...) {
+vm_posterior <- function(th, prior = c(0, 0, 0), niter = 1000, ...) {
 
   th <- as.circrad(th)
 
   # Run intercept-only von Mises regression model
-  res <- circglmbayes::circGLM(th = th, conj_prior = prior, ...)
+  res <- circglmbayes::circGLM(th = th, conj_prior = prior,
+                               Q = niter, ...)
 
   coef_vmpost <- coef(res)
   rownames(coef_vmpost) <- c("mu", "kappa")
