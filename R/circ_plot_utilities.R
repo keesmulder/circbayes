@@ -243,7 +243,7 @@ plot_circbayes <- function(x,
 
   if (n_samples > 0) {
     param_mat <- posterior_samples(x)
-    p <- p + geom_mcmc_fun_sample(dvm,
+    p <- p + geom_mcmc_fun_sample(pdf_fun,
                                   param_mat = param_mat,
                                   alpha = .1,
                                   n_funs = min(nrow(param_mat), n_samples))
@@ -252,7 +252,7 @@ plot_circbayes <- function(x,
 
   if (add_ci) {
     param_mat <- posterior_samples(x)
-    p <- p + geom_mcmc_ci_sample(dvm,
+    p <- p + geom_mcmc_ci_sample(pdf_fun,
                                  param_mat = param_mat,
                                  qpts = min(qpts, nrow(param_mat)),
                                  linetype = "dashed")
@@ -261,7 +261,7 @@ plot_circbayes <- function(x,
 
   if (add_fit) {
     # Add pdf of posterior estimates
-    p <- p + ggplot2::stat_function(fun = dvm,
+    p <- p + ggplot2::stat_function(fun = pdf_fun,
                                     args = list(mu = coef(x)[1, 1],
                                                 kp =  coef(x)[2, 1]),
                                     size = 1)
