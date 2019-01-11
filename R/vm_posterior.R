@@ -1,4 +1,17 @@
 
+#' Random generation for the von Mises distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mu Mean direction.
+#' @param kp Concentration parameter.
+#'
+#' @return Numeric vector of \code{n} samples from the von Mises disttribution,
+#'   in radians.
+#' @export
+#'
+#' @examples
+#' rvm(40, 3, 2)
+#'
 rvm <- function(n, mu = 0, kp = 1) {
   circrad(circglmbayes::rvmc(n, mu, kp))
 }
@@ -41,6 +54,21 @@ plot.vm_posterior_mod <- function(x, ...) {
 }
 
 
+#' Posterior of the von Mises distribution.
+#'
+#' @param th Circular observations, either \code{numeric} in radians, or
+#'   \code{circular}.
+#' @param prior Numeric of length 3. Prior parameters for conjugate prior of the
+#'   von Mises distribution. The order is \eqn{\mu_0, R_0, c}.
+#' @param niter Number of iterations to perform MCMC for.
+#' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vm_posterior(rvm(30, 2, 5))
+#'
 vm_posterior <- function(th, prior = c(0, 0, 0), niter = 1000, ...) {
 
   th <- as.circrad(th)
