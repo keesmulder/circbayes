@@ -207,6 +207,8 @@ ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
 #' @param ymax
 #' @param start
 #' @param direction
+#' @param pdf_fun
+#' @param qpts
 #' @param ...
 #'
 #' @return
