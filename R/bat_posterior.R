@@ -76,18 +76,25 @@ plot.bat_posterior_mod <- function(x, ...) {
 #'
 bat_posterior <- function(th,
                          bat_type = "power",
+                         mu_logprior_fun  = function(mu)  0,
+                         kp_logprior_fun  = function(kp)  0,
+                         lam_logprior_fun = function(lam) 0,
                          niter = 1000, ...) {
 
   th <- as.circrad(th)
 
   # Run single component Power or Inverse Batschelet mixture model.
   res <- flexcircmix::fitbatmix(x = th, method = "bayes", Q = niter, n_comp = 1,
-                                bat_type = bat_type, ...)
+                                bat_type = bat_type,
+                                mu_logprior_fun  = mu_logprior_fun,
+                                kp_logprior_fun  = kp_logprior_fun,
+                                lam_logprior_fun = lam_logprior_fun, ...)
 
   coef_batpost <- coef(res)
-  rownames(coef_batpost) <- c("mu", "kappa", "lam")
 
-  batpost_res <- c(list(coef = coef_batpost), res)
+  batpost_res <- c(list(coef = coef_batpost),
+                   res,
+                   list(data = res$x))
 
   class(batpost_res) <- c("bat_posterior_mod", class(batpost_res))
 
