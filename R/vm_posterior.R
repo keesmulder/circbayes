@@ -3,9 +3,11 @@ rvm <- function(n, mu = 0, kp = 1) {
   circrad(circglmbayes::rvmc(n, mu, kp))
 }
 
+
 logBesselI <- function(x, nu = 0) {
   x + log(besselI(x, nu, expon.scaled = TRUE))
 }
+
 
 dvm <- function(x, mu = 0, kp = 1, log = FALSE) {
   logp <- kp * cos(x - mu) - log(2 * pi) - logBesselI(kp, 0)
@@ -18,20 +20,21 @@ dvm <- function(x, mu = 0, kp = 1, log = FALSE) {
 }
 
 
-
-
 print.vm_posterior_mod <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))
 }
+
 
 coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(x, ...) {
   x$coef
 }
 
+
 posterior_samples.vm_posterior_mod <- function(x) {
   cbind(mu = x$mu_chain,
         kp = x$kp_chain)
 }
+
 
 plot.vm_posterior_mod <- function(x, ...) {
   plot_circbayes(x, ...)

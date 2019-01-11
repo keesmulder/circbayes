@@ -3,7 +3,7 @@ context("Plotting functions for mcmc output")
 
 # Test data
 dat       <- data.frame(x = rvm(100) %% (2*pi) - pi)
-sam       <- vm_posterior(dat, Q = 100)
+sam       <- vm_posterior(dat, niter = 100)
 param_mat <- cbind(sam$mu_chain, sam$kp_chain)
 
 

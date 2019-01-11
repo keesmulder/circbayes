@@ -32,7 +32,7 @@ test_that("Plotting", {
 
   expect_is(plot(mod),                                        "gg")
   expect_is(plot(mod, add_ci = TRUE),                         "gg")
-  expect_is(plot(mod, add_samples = 10, polar_coord = FALSE), "gg")
+  expect_is(plot(mod, n_samples = 10, polar_coord = FALSE),   "gg")
   expect_is(plot(mod, add_fit = FALSE, add_data = FALSE),     "gg")
 
   # Clock data

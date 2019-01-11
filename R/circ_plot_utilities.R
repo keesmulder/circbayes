@@ -223,6 +223,7 @@ plot_circbayes <- function(x,
                            add_ci      = FALSE,
                            bins        = 90,
                            r = 1, ymax = NA,
+                           qpts        = 100,
                            start       = pi/2,
                            direction   = -1,
                            ...) {
@@ -245,7 +246,7 @@ plot_circbayes <- function(x,
     p <- p + geom_mcmc_fun_sample(dvm,
                                   param_mat = param_mat,
                                   alpha = .1,
-                                  n_funs = n_samples)
+                                  n_funs = min(nrow(param_mat), n_samples))
   }
 
 
@@ -253,6 +254,7 @@ plot_circbayes <- function(x,
     param_mat <- posterior_samples(x)
     p <- p + geom_mcmc_ci_sample(dvm,
                                  param_mat = param_mat,
+                                 qpts = min(qpts, nrow(param_mat)),
                                  linetype = "dashed")
   }
 
