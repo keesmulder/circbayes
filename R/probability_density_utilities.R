@@ -10,18 +10,6 @@ param_version_of_fun <- function(fun) {
 }
 
 
-#' Obtain a matrix of parameters from a circular Bayesian object
-#'
-#' Generic method to obtain parameters from a circular Bayesian model.
-#'
-#' @param x Object containing a fit model with MCMC samples.
-#'
-#' @return A matrix of parameters, with as columns different parameters and as
-#'   rows different iterations.
-#' @export
-get_param_mat <- function(x) {
-  UseMethod("get_param_mat", x)
-}
 
 
 # Return sample of pdfs on x grid
