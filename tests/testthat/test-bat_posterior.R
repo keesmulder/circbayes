@@ -1,6 +1,6 @@
 context("Batschelet")
 
-th <- rvm(20, 5, 6)
+th <- rinvbat(20, 5, 6)
 
 test_that("Random generation", {
   expect_length(th, 20)
