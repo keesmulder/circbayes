@@ -17,5 +17,15 @@ posterior_samples <- function(object, ...)  {
 }
 
 
-
+#' Obtain the prediction function of a VM regression object.
+#'
+#' @param x Object.
+#' @param ... Further arguments.
+#'
+#' @return A function
+#' @export
+#'
+predict_function <- function(x, ...) {
+  UseMethod("predict_function", x)
+}
 
