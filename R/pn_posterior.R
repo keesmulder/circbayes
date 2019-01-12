@@ -19,7 +19,19 @@ rprojnorm <- function(n, muvec = c(1, 1)) {
 }
 
 
-# dprojnorm not found in package.
+dprojnorm <- Vectorize(function(th, muvec = c(1, 1), log = FALSE) {
+  u    <- c(cos(th), sin(th))
+  utmu <- t(u) %*% muvec
+  logp <- log(1 + utmu * pnorm(utmu) / dnorm(utmu)) -
+    log(2*pi) -
+    (muvec[1]^2 + muvec[2]^2) / 2
+
+  if (log) {
+    return(logp)
+  } else {
+    return(exp(logp))
+  }
+})
 
 
 print.pn_posterior_mod <- function(x, digits = 3, ...) {

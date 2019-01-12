@@ -5,6 +5,10 @@ th <- rprojnorm(100, 10*c(5, 16))
 test_that("Random generation", {
   expect_length(th, 100)
   expect_is(th, "numeric")
+
+  skip("Dev test")
+  curve(dprojnorm, -pi, pi)
+  hist(rprojnorm(100000), breaks = 1000)
 })
 
 mod  <- pn_posterior(th, niter = 10)
