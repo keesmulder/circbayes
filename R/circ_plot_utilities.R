@@ -22,9 +22,9 @@ gg_circular_elems <- function(r = 1, ymax = NA, start = pi/2, direction = -1) {
 
 
 breaks_circular <- function(units = "degrees", nticks = 4,
-                           digits = 0, limits = c(0, 2 * pi),
-                           positive_labels = TRUE,
-                           scale_function = ggplot2::scale_x_continuous, ...) {
+                            digits = 0, limits = c(0, 2 * pi),
+                            positive_labels = TRUE,
+                            scale_function = ggplot2::scale_x_continuous, ...) {
 
   if (round(abs(limits[1] - limits[2]) - 2*pi, 3) != 0) {
     stop("Limits must be a range of length 2*pi.")
@@ -216,19 +216,19 @@ ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
 #'
 #' @examples
 #'
-plot_circbayes <- function(x,
-                           pdf_fun     = dvm,
-                           polar_coord = TRUE,
-                           add_data    = TRUE,
-                           add_fit     = TRUE,
-                           n_samples   = 0,
-                           add_ci      = FALSE,
-                           bins        = 90,
-                           r = 1, ymax = NA,
-                           qpts        = 100,
-                           start       = pi/2,
-                           direction   = -1,
-                           ...) {
+plot_circbayes_univariate <- function(x,
+                                pdf_fun     = dvm,
+                                polar_coord = TRUE,
+                                add_data    = TRUE,
+                                add_fit     = TRUE,
+                                n_samples   = 0,
+                                add_ci      = FALSE,
+                                bins        = 90,
+                                r = 1, ymax = NA,
+                                qpts        = 100,
+                                start       = pi/2,
+                                direction   = -1,
+                                ...) {
 
   # Basic histogram without samples.
   p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))

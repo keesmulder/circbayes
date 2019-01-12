@@ -50,7 +50,7 @@ posterior_samples.vm_posterior_mod <- function(x) {
 
 
 plot.vm_posterior_mod <- function(x, ...) {
-  plot_circbayes(x, ...)
+  plot_circbayes_univariate(x, ...)
 }
 
 

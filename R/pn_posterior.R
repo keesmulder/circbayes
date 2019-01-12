@@ -39,7 +39,7 @@ posterior_samples.pn_posterior_mod <- function(x) {
 
 #
 # plot.pn_posterior_mod <- function(x, ...) {
-#   plot_circbayes(x, ...)
+#   plot_circbayes_univariate(x, ...)
 # }
 
 

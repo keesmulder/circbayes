@@ -57,7 +57,7 @@ plot.bat_posterior_mod <- function(x, ...) {
     pdf_fun <- dpowbat
   }
 
-  plot_circbayes(x, pdf_fun = pdf_fun, ...)
+  plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
 }
 
 
