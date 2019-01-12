@@ -1,6 +1,6 @@
 context("Projected Normal")
 
-th <- rprojnorm(100, c(5, 16))
+th <- rprojnorm(100, 4, 2)
 
 test_that("Random generation", {
   expect_length(th, 100)

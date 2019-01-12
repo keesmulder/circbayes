@@ -83,7 +83,7 @@ inf_crit.pn_posterior_mod <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' pn_posterior(rpn(30, 2, 5))
+#' pn_posterior(rprojnorm(30, 2, 5))
 #'
 pn_posterior <- function(th, niter = 1000, thin = 1, ...) {
 
