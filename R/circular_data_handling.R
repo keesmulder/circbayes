@@ -20,6 +20,22 @@ circrad <- function(x) {
 }
 
 
+#' Print a \code{circrad} object.
+#'
+#' @param x Object.
+#' @param ... Further arguments passed to \code{print.numeric}
+#'
+#' @export
+#'
+#' @examples
+#' print(circrad(pi/2))
+#'
+print.circrad <- function(x, ...) {
+  cat("# Circular data in radians: \n")
+  print(as.numeric(x), ...)
+}
+
+
 
 as.circrad <- function(x) {
 
