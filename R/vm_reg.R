@@ -20,10 +20,8 @@ rvm_reg <- function(n, beta0 = 0, kp = 1, beta = c(1, 2), delta = c(1, -1)) {
                                           truebeta  = beta,
                                           truedelta = delta)
   dmat[, 'th'] <- as.circrad(dmat[, 'th'])
-  df <- data.frame(dmat)
 
-  attributes(df) <- c(attributes(df), attributes(dmat)[-(1:3)])
-  df
+  dmat
 }
 
 
@@ -62,6 +60,7 @@ predict_function.vm_reg_mod <- function(object,
     unname(object$b0_meandir + xpart + dpart)
   }
 }
+
 
 posterior_samples.vm_reg_mod <- function(x) {
   n_param <- 2 + length(x$bt_mean) + length(x$dt_meandir)
@@ -108,6 +107,7 @@ vm_reg <- function(formula,
 
   res$coef <- coef(res)
   res$parnames <- rownames(res$coef)
+  res$data <- data
 
   class(res) <- c("vm_reg_mod", class(res))
 

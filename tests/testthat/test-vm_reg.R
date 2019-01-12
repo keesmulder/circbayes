@@ -28,6 +28,12 @@ test_that("Posterior sampling", {
 })
 
 
+test_that("Predict", {
+  expect_is(predict_function(mod)(newdata = as.matrix(th_df)[, -1]), "matrix")
+})
+
+
+
 test_that("Plotting", {
 
   expect_is(plot(mod),                                        "gg")
