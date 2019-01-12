@@ -283,6 +283,88 @@ plot_circbayes_univariate <- function(x,
 
 
 
+#' Plot a circular model.
+#'
+#'
+#' @param x
+#' @param pred_name
+#' @param pred_fun
+#' @param add_data
+#' @param add_fit
+#' @param n_samples
+#' @param add_ci
+#' @param qpts
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+plot_circbayes_regression <- function(x,
+                                      pred_name,
+                                      add_data    = TRUE,
+                                      add_fit     = TRUE,
+                                      n_samples   = 0,
+                                      add_ci      = FALSE,
+                                      qpts        = 100,
+                                      ...) {
+
+  pred_fun <- predict_function(x)
+
+  # Basic histogram without samples.
+  p <- ggplot2::ggplot(data.frame(th = as.circrad(x$data_th), x = x$data_X[, pred_name]))
+
+  if (add_data) {
+    p <- p +
+      ggplot2::geom_point(
+        mapping = ggplot2::aes_string(x = "x", y = "th"))
+  }
+
+
+
+  if (n_samples > 0) {
+    param_mat <- posterior_samples(x)
+    p <- p + geom_mcmc_fun_sample(pdf_fun,
+                                  param_mat = param_mat,
+                                  alpha = .1,
+                                  n_funs = min(nrow(param_mat), n_samples))
+  }
+
+
+  if (add_ci) {
+    param_mat <- posterior_samples(x)
+    p <- p + geom_mcmc_ci_sample(pdf_fun,
+                                 param_mat = param_mat,
+                                 qpts = min(qpts, nrow(param_mat)),
+                                 linetype = "dashed")
+  }
+
+
+  if (add_fit) {
+    # Add pdf of posterior estimates
+    base_df <- data.frame(t(rep(0, length(x$parnames) - 2)))
+    colnames(base_df) <- x$parnames[-(1:2)]
+    p <- p + ggplot2::stat_function(fun = Vectorize(function(x) {
+      base_df[, pred_name] <- x
+      pred_fun(newdata = base_df)
+    }), size = 1)
+  }
+
+
+  if (polar_coord) {
+    p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
+  } else {
+    p <- p + ggplot2::coord_cartesian(...)
+  }
+
+  return(p)
+}
+
+
+
+
+
 
 
 #'
