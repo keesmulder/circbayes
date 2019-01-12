@@ -29,3 +29,32 @@ predict_function <- function(x, ...) {
   UseMethod("predict_function", x)
 }
 
+
+
+
+#' Extract information criteria from fit model object.
+#'
+#' @param x Fit model object.
+#' @param ... Further arguments.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+inf_crit <- function(x, ...) {
+  UseMethod("inf_crit", x)
+}
+
+
+
+inf_crit.list <- function(x, ...) {
+  nms <- names(x)
+  ics <- x[grep("IC", nms, value = TRUE)]
+  if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
+    ic_df <- t(data.frame(ics))
+    colnames(ic_df) <- "value"
+    return(ic_df)
+  } else {
+    return(ics)
+  }
+}
