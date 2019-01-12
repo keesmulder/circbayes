@@ -1,6 +1,6 @@
 context("Projected Normal")
 
-th <- rprojnorm(100, 10*c(5, 16))
+th <- rprojnorm(100, c(5, 16))
 
 test_that("Random generation", {
   expect_length(th, 100)
@@ -28,16 +28,16 @@ test_that("Posterior sampling", {
 })
 
 
-# test_that("Plotting", {
-#
-#   expect_is(plot(mod),                                        "gg")
-#   expect_is(plot(mod, add_ci = TRUE),                         "gg")
-#   expect_is(plot(mod, n_samples = 10, polar_coord = FALSE),   "gg")
-#   expect_is(plot(mod, add_fit = FALSE, add_data = FALSE),     "gg")
-#
-#   # Clock data
-#   expect_is(plot(mod, add_fit = FALSE, add_data = TRUE,
-#                  start = 0, direction = 1, units = "hours"),  "gg")
-# })
+test_that("Plotting", {
+
+  expect_is(plot(mod),                                        "gg")
+  expect_is(plot(mod, add_ci = TRUE),                         "gg")
+  expect_is(plot(mod, n_samples = 10, polar_coord = FALSE),   "gg")
+  expect_is(plot(mod, add_fit = FALSE, add_data = FALSE),     "gg")
+
+  # Clock data
+  expect_is(plot(mod, add_fit = FALSE, add_data = TRUE,
+                 start = 0, direction = 1, units = "hours"),  "gg")
+})
 #
 #

@@ -19,8 +19,8 @@ rprojnorm <- function(n, muvec = c(1, 1)) {
 }
 
 
-dprojnorm <- Vectorize(function(th, muvec = c(1, 1), log = FALSE) {
-  u    <- c(cos(th), sin(th))
+dprojnorm <- Vectorize(function(x, muvec = c(1, 1), log = FALSE) {
+  u    <- c(cos(x), sin(x))
   utmu <- t(u) %*% muvec
   logp <- log(1 + utmu * pnorm(utmu) / dnorm(utmu)) -
     log(2*pi) -
@@ -45,14 +45,14 @@ coef.pn_posterior_mod <- coefficients.pn_posterior_mod <- function(x, ...) {
 
 
 posterior_samples.pn_posterior_mod <- function(x) {
-  cbind(mu1 = x$B1,
-        mu2 = x$B2)
+  cbind(mu1 = as.numeric(x$B1),
+        mu2 = as.numeric(x$B2))
 }
 
 #
-# plot.pn_posterior_mod <- function(x, ...) {
-#   plot_circbayes_univariate(x, ...)
-# }
+plot.pn_posterior_mod <- function(x, ...) {
+  plot_circbayes_univariate(x, pdf_fun = dprojnorm, ...)
+}
 
 
 
@@ -95,6 +95,7 @@ pn_posterior <- function(th, niter = 1000, thin = 1, ...) {
   coef_pnpost <- bpnreg::coef_lin(res)
   rownames(coef_pnpost) <- c("mu1", "mu2")
   res[["coef"]] <- coef_pnpost
+  res[["data"]] <- th
 
   class(res) <- c("pn_posterior_mod", class(res))
 

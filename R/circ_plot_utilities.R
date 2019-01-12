@@ -179,16 +179,6 @@ gg_inside_labels <- function(units = "degrees", nticks = 4,
                       plot.margin = ggplot2::unit(c(1,1,1,1) * -zoom, "cm")))
 }
 
-ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
-  p +
-    scale_x_circular(units = "hours", nticks = 24,
-                     minor_breaks = 1:4 * pi / 2) +
-    ylim(0, NA) + coord_cartesian(expand = FALSE) +
-    theme_classic() +
-    xlab("") +
-    ylab("Density") +
-    theme(legend.position = 'none')
-}
 
 
 
@@ -233,6 +223,14 @@ plot_circbayes_univariate <- function(x,
   # Basic histogram without samples.
   p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
 
+
+  # If the function is not of fun(x, params) form, refactor the function so it is.
+  nm_formals <- names(formals(pdf_fun)[-1])
+  if (!("params" %in% nm_formals)) {
+    pdf_fun <- param_version_of_fun(pdf_fun)
+  }
+
+
   if (add_data) {
     p <- p +
       ggplot2::geom_histogram(
@@ -264,8 +262,7 @@ plot_circbayes_univariate <- function(x,
   if (add_fit) {
     # Add pdf of posterior estimates
     p <- p + ggplot2::stat_function(fun = pdf_fun,
-                                    args = list(mu = coef(x)[1, 1],
-                                                kp =  coef(x)[2, 1]),
+                                    args = list(params = coef(x)[, 1]),
                                     size = 1)
   }
 
