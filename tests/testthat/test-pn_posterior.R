@@ -1,6 +1,6 @@
 context("Projected Normal")
 
-th <- rprojnorm(100, c(5, 6))
+th <- rprojnorm(100, 10*c(5, 16))
 
 test_that("Random generation", {
   expect_length(th, 100)
@@ -19,6 +19,8 @@ test_that("Posterior sampling", {
   expect_is(mod2,       "pn_posterior_mod")
   # expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
+
+  expect_error(inf_crit(mod), NA)
 })
 
 

@@ -37,16 +37,16 @@ predict_function <- function(x, ...) {
 #' @param x Fit model object.
 #' @param ... Further arguments.
 #'
-#' @return
+#' @return A dataframe or list of information criteria.
 #' @export
 #'
-#' @examples
 inf_crit <- function(x, ...) {
   UseMethod("inf_crit", x)
 }
 
 
-
+# This is the fall-back generic. If this doesn't work, a custom method must be
+# written.
 inf_crit.list <- function(x, ...) {
   nms <- names(x)
   ics <- x[grep("IC", nms, value = TRUE)]

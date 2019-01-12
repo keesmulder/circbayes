@@ -43,6 +43,22 @@ posterior_samples.pn_posterior_mod <- function(x) {
 # }
 
 
+
+
+# This is the fall-back generic. If this doesn't work, a custom method must be
+# written.
+inf_crit.pn_posterior_mod <- function(x, ...) {
+  ics <- x$model.fit
+  if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
+    ic_df <- t(data.frame(ics))
+    colnames(ic_df) <- "value"
+    return(ic_df)
+  } else {
+    return(ics)
+  }
+}
+
+
 #' Posterior of the Projected Normal distribution.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
