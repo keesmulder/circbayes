@@ -19,7 +19,8 @@ rprojnorm <- function(n, muvec = c(1, 1)) {
 }
 
 
-dprojnorm <- Vectorize(function(x, muvec = c(1, 1), log = FALSE) {
+dprojnorm <- Vectorize(function(x, mu1 = 1, mu2 = 1, log = FALSE) {
+  muvec <- c(mu1, mu2)
   u    <- c(cos(x), sin(x))
   utmu <- t(u) %*% muvec
   logp <- log(1 + utmu * pnorm(utmu) / dnorm(utmu)) -
