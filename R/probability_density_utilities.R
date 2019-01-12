@@ -14,7 +14,9 @@ param_version_of_fun <- function(fun) {
 
 # Return sample of pdfs on x grid
 geom_mcmc_fun_sample <- function(fun, param_mat, n_funs = 100,
-                                 col = grDevices::rgb(0.5, 0.5, 0.57, .25), ...) {
+                                 alpha = .2,
+                                 col = grDevices::rgb(0.1, 0.1, 0.1, alpha),
+                                 ...) {
   n_param <- nrow(param_mat)
 
   # If the pdf is not of fun(x, params) form, refactor the function so it is.

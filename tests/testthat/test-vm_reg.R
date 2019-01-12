@@ -1,6 +1,6 @@
 context("Von Mises Regression")
 
-th_df <- rvm_reg(20)
+th_df <- rvm_reg(20, beta = .5, kp = 50)
 
 test_that("Random generation", {
   expect_equal(nrow(th_df), 20)
@@ -36,14 +36,21 @@ test_that("Predict", {
 
 test_that("Plotting", {
 
-  expect_is(plot(mod),                                        "gg")
-  expect_is(plot(mod, add_ci = TRUE),                         "gg")
-  expect_is(plot(mod, n_samples = 10, polar_coord = FALSE),   "gg")
+  expect_is(plot(mod),                                    "gg")
+  expect_is(plot(mod, add_ci = TRUE),                     "gg")
+  expect_is(plot(mod, n_samples = 10),                    "gg")
+  expect_is(plot(mod, add_fit = FALSE, add_data = FALSE), "gg")
+
+})
+
+test_that("Regression plotting choices", {
+
+  expect_is(plot(mod, pred_name = 'c1'),                      "gg")
+  expect_error(plot(mod,  pred_name = 'nonexisting'))
+  expect_is(plot(mod, n_samples = 10),   "gg")
   expect_is(plot(mod, add_fit = FALSE, add_data = FALSE),     "gg")
 
-  # Clock data
-  expect_is(plot(mod, add_fit = FALSE, add_data = TRUE,
-                 start = 0, direction = 1, units = "hours"),  "gg")
 })
+
 
 

@@ -14,11 +14,11 @@
 #'
 rvm_reg <- function(n, beta0 = 0, kp = 1, beta = c(1, 2), delta = c(1, -1)) {
   dmat <- circglmbayes::generateCircGLMData(n = n, residkappa = kp,
-                                          nconpred  = length(beta),
-                                          ncatpred  = length(delta),
-                                          truebeta0 = beta0,
-                                          truebeta  = beta,
-                                          truedelta = delta)
+                                            nconpred  = length(beta),
+                                            ncatpred  = length(delta),
+                                            truebeta0 = beta0,
+                                            truebeta  = beta,
+                                            truedelta = delta)
   dmat[, 'th'] <- as.circrad(dmat[, 'th'])
 
   dmat
@@ -39,6 +39,29 @@ coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(x, ...) {
 predict.vm_reg_mod <- function(object, newdata, ...) {
   NextMethod()
 }
+
+# Prediction function for a given set of named parameters.
+# beta and delta must be named to find them in newdata.
+predict_function_pars <- function(beta_0 = 0, beta = NULL, delta = NULL,
+                                  linkfun = function(x) 2 * atan(x)) {
+  function(newdata) {
+    if (length(delta) == 0) {
+      dpart <- 0
+    } else {
+      d <- newdata[, names(delta)]
+      dpart <- d %*% t(delta)
+    }
+
+    if (length(beta) == 0) {
+      xpart <- 0
+    } else {
+      x <- newdata[, names(beta)]
+      xpart <- linkfun(x %*% t(beta))
+    }
+    beta_0 + xpart + dpart
+  }
+}
+
 
 
 predict_function.vm_reg_mod <- function(object,

@@ -217,18 +217,18 @@ ggClockifyFlat <- function(p, r = 1, labdist = .12, ymax = NA, zoom = 1) {
 #' @examples
 #'
 plot_circbayes_univariate <- function(x,
-                                pdf_fun     = dvm,
-                                polar_coord = TRUE,
-                                add_data    = TRUE,
-                                add_fit     = TRUE,
-                                n_samples   = 0,
-                                add_ci      = FALSE,
-                                bins        = 90,
-                                r = 1, ymax = NA,
-                                qpts        = 100,
-                                start       = pi/2,
-                                direction   = -1,
-                                ...) {
+                                      pdf_fun     = dvm,
+                                      polar_coord = TRUE,
+                                      add_data    = TRUE,
+                                      add_fit     = TRUE,
+                                      n_samples   = 0,
+                                      add_ci      = FALSE,
+                                      bins        = 90,
+                                      r = 1, ymax = NA,
+                                      qpts        = 100,
+                                      start       = pi/2,
+                                      direction   = -1,
+                                      ...) {
 
   # Basic histogram without samples.
   p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
@@ -280,6 +280,14 @@ plot_circbayes_univariate <- function(x,
 }
 
 
+# Helper functions giving regression lines.
+single_pred_fun_beta <- function(x, params, linkfun = function(x) 2 * atan(x)) {
+  params[1] + linkfun(params[2] * x)
+}
+single_pred_fun_delta <- function(x, params) {
+  params[1] + params[2] * x
+}
+
 
 
 
@@ -288,7 +296,6 @@ plot_circbayes_univariate <- function(x,
 #'
 #' @param x
 #' @param pred_name
-#' @param pred_fun
 #' @param add_data
 #' @param add_fit
 #' @param n_samples
@@ -303,14 +310,28 @@ plot_circbayes_univariate <- function(x,
 #'
 plot_circbayes_regression <- function(x,
                                       pred_name,
-                                      add_data    = TRUE,
-                                      add_fit     = TRUE,
-                                      n_samples   = 0,
-                                      add_ci      = FALSE,
-                                      qpts        = 100,
+                                      add_data      = TRUE,
+                                      add_fit       = TRUE,
+                                      n_samples     = 0,
+                                      alpha_samples = .3,
+                                      add_ci        = FALSE,
+                                      qpts          = 100,
                                       ...) {
 
-  pred_fun <- predict_function(x)
+  # If no predictor name is chosen, pick the first.
+  if (missing(pred_name)) pred_name <- x$parnames[3]
+
+  # Check if the chosen predictor is delta or beta.
+  if (pred_name %in% colnames(x$bt_mean)) {
+    pred_fun <- single_pred_fun_beta
+    par_fit  <- x$bt_mean[, pred_name]
+  } else if (pred_name %in% colnames(x$dt_meandir)) {
+    pred_fun <- single_pred_fun_delta
+    par_fit  <- x$dt_meandir[, pred_name]
+  } else {
+    stop(paste("pred_name", pred_name, "not found."))
+  }
+
 
   # Basic histogram without samples.
   p <- ggplot2::ggplot(data.frame(th = as.circrad(x$data_th), x = x$data_X[, pred_name]))
@@ -322,19 +343,19 @@ plot_circbayes_regression <- function(x,
   }
 
 
-
+  # Add samples
   if (n_samples > 0) {
-    param_mat <- posterior_samples(x)
-    p <- p + geom_mcmc_fun_sample(pdf_fun,
+    param_mat <- posterior_samples(x)[, c("Intercept", pred_name)]
+    p <- p + geom_mcmc_fun_sample(pred_fun,
                                   param_mat = param_mat,
-                                  alpha = .1,
+                                  alpha = alpha_samples,
                                   n_funs = min(nrow(param_mat), n_samples))
   }
 
 
   if (add_ci) {
-    param_mat <- posterior_samples(x)
-    p <- p + geom_mcmc_ci_sample(pdf_fun,
+    param_mat <- posterior_samples(x)[, c("Intercept", pred_name)]
+    p <- p + geom_mcmc_ci_sample(pred_fun,
                                  param_mat = param_mat,
                                  qpts = min(qpts, nrow(param_mat)),
                                  linetype = "dashed")
@@ -342,20 +363,11 @@ plot_circbayes_regression <- function(x,
 
 
   if (add_fit) {
-    # Add pdf of posterior estimates
-    base_df <- data.frame(t(rep(0, length(x$parnames) - 2)))
-    colnames(base_df) <- x$parnames[-(1:2)]
-    p <- p + ggplot2::stat_function(fun = Vectorize(function(x) {
-      base_df[, pred_name] <- x
-      pred_fun(newdata = base_df)
-    }), size = 1)
-  }
+    b0_fit <- x$b0_meandir
 
-
-  if (polar_coord) {
-    p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
-  } else {
-    p <- p + ggplot2::coord_cartesian(...)
+    p <- p + ggplot2::stat_function(fun = pred_fun,
+                                    args = list(params = c(b0_fit, par_fit)),
+                                    size = 1)
   }
 
   return(p)
