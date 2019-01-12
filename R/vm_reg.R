@@ -64,6 +64,18 @@ predict_function_pars <- function(beta_0 = 0, beta = NULL, delta = NULL,
 
 
 
+# Helper functions giving regression lines when plotting. These are simpler,
+# because regression lines assume all other x's will be 0.
+single_pred_fun_beta <- function(x, params, linkfun = function(x) 2 * atan(x)) {
+  params[1] + linkfun(params[2] * x)
+}
+single_pred_fun_delta <- function(x, params) {
+  params[1] + params[2] * x
+}
+
+
+
+
 predict_function.vm_reg_mod <- function(object,
                                         linkfun = function(x) 2 * atan(x)) {
   function(newdata) {

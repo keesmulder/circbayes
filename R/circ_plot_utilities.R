@@ -277,15 +277,6 @@ plot_circbayes_univariate <- function(x,
 }
 
 
-# Helper functions giving regression lines.
-single_pred_fun_beta <- function(x, params, linkfun = function(x) 2 * atan(x)) {
-  params[1] + linkfun(params[2] * x)
-}
-single_pred_fun_delta <- function(x, params) {
-  params[1] + params[2] * x
-}
-
-
 
 
 #' Plot a circular model.

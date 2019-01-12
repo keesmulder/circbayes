@@ -17,11 +17,11 @@ mod2 <- pn_posterior(th, niter = 10, thin = 2)
 test_that("Posterior sampling", {
 
   expect_is(mod,        "pn_posterior_mod")
-  # expect_is(plot(mod),  "gg")
+  expect_is(plot(mod),  "gg")
   expect_is(coef(mod),  "matrix")
 
   expect_is(mod2,       "pn_posterior_mod")
-  # expect_is(plot(mod2), "gg")
+  expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
 
   expect_error(inf_crit(mod), NA)

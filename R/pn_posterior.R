@@ -12,8 +12,8 @@
 #' @examples
 #' rpn(40, 3, 2)
 #'
-rprojnorm <- function(n, muvec = c(1, 1)) {
-  if (is.vector(muvec)) muvec <- t(muvec)
+rprojnorm <- function(n, mu1 = 1, mu2 = 1) {
+  muvec <- cbind(mu1, mu2)
   th <- atan2(rnorm(n, muvec[, 2], 1), rnorm(n, muvec[, 1], 1))
   circrad(force_neg_pi_pi(th))
 }
