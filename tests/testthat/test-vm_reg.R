@@ -30,6 +30,9 @@ test_that("Posterior sampling", {
 
 test_that("Predict", {
   expect_is(predict_function(mod)(newdata = as.matrix(th_df)), "matrix")
+  expect_is(predict_function(mod)(newdata =
+                                    as.matrix(rvm_reg(20, beta = .5, kp = 50))),
+            "matrix")
 })
 
 

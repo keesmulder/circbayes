@@ -1,6 +1,6 @@
 context("Batschelet")
 
-th <- rinvbat(20, 5, 6)
+th <- rinvbat(20, 5, 6, .5)
 
 test_that("Random generation", {
   expect_length(th, 20)
@@ -22,6 +22,15 @@ test_that("Posterior sampling", {
   expect_is(mod2,       "bat_posterior_mod")
   expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
+})
+
+
+test_that("Information criteria", {
+  expect_error(inf_crit(mod), NA)
+})
+
+test_that("Hypothesis testing", {
+  expect_is(marg_lik(mod), "logml")
 })
 
 

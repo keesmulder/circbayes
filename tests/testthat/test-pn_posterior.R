@@ -24,7 +24,16 @@ test_that("Posterior sampling", {
   expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
 
+})
+
+
+
+test_that("Information criteria", {
   expect_error(inf_crit(mod), NA)
+})
+
+test_that("Hypothesis testing", {
+  expect_is(marg_lik(mod), "logml")
 })
 
 
@@ -39,5 +48,3 @@ test_that("Plotting", {
   expect_is(plot(mod, add_fit = FALSE, add_data = TRUE,
                  start = 0, direction = 1, units = "hours"),  "gg")
 })
-#
-#
