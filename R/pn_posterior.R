@@ -56,6 +56,34 @@ plot.pn_posterior_mod <- function(x, ...) {
 }
 
 
+# Log posterior of pn.
+log_posterior_pn <- function(muvec, data) {
+  sum(dprojnorm(data, muvec[1], muvec[2], log = TRUE))
+}
+
+
+marg_lik.pn_posterior_mod <- function(x, ...) {
+
+  sam <- posterior_samples(x)
+
+  lb <- c(-Inf, -Inf)
+  ub <- c(Inf, Inf)
+
+  names(lb) <- colnames(sam)
+  names(ub) <- colnames(sam)
+
+  bsobj <- bridgesampling::bridge_sampler(data = x$data,
+                                          samples = as.matrix(sam),
+                                          param_types = c("real", "real"),
+                                          log_posterior = log_posterior_pn,
+                                          lb = lb, ub = ub,
+                                          silent = TRUE,
+                                          ...)
+
+  bridgesampling::logml(bsobj)
+}
+
+
 
 
 # This is the fall-back generic. If this doesn't work, a custom method must be
@@ -70,6 +98,8 @@ inf_crit.pn_posterior_mod <- function(x, ...) {
     return(ics)
   }
 }
+
+
 
 
 #' Posterior of the Projected Normal distribution.

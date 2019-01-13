@@ -37,6 +37,18 @@ test_that("Predict", {
 
 
 
+test_that("Information criteria", {
+  expect_error(inf_crit(mod), NA)
+})
+
+test_that("Hypothesis testing", {
+  expect_is(marg_lik(mod), "numeric")
+})
+
+
+
+
+
 test_that("Plotting", {
 
   expect_is(plot(mod),                                    "gg")

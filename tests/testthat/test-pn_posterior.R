@@ -33,7 +33,7 @@ test_that("Information criteria", {
 })
 
 test_that("Hypothesis testing", {
-  expect_is(marg_lik(mod), "logml")
+  expect_is(marg_lik(mod), "numeric")
 })
 
 

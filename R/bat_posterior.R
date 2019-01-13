@@ -75,12 +75,15 @@ marg_lik.bat_posterior_mod <- function(x, ...) {
   names(lb) <- colnames(sam)
   names(ub) <- colnames(sam)
 
-  bridgesampling::bridge_sampler(data = x$data,
-                                 samples = as.matrix(sam),
-                                 param_types = c("circular", "real", "real"),
-                                 log_posterior = x$log_posterior,
-                                 lb = lb, ub = ub, ...)
+  bsobj <- bridgesampling::bridge_sampler(data = x$data,
+                                          samples = as.matrix(sam),
+                                          param_types = c("circular", "real", "real"),
+                                          log_posterior = x$log_posterior,
+                                          lb = lb, ub = ub,
+                                          silent = TRUE,
+                                          ...)
 
+  bridgesampling::logml(bsobj)
 }
 
 

@@ -104,7 +104,8 @@ marg_lik.vm_posterior_mod <- function(x, method = "integrate", ...) {
                                             samples = as.matrix(sam),
                                             param_types = c("circular", "real"),
                                             log_posterior = log_posterior_vm,
-                                            lb = lb, ub = ub, ...)
+                                            lb = lb, ub = ub,
+                                            silent = TRUE, ...)
     return(c(log_marg_lik = bridgesampling::logml(bsobj)))
   } else {
     stop(paste("Method", method, "not found."))
