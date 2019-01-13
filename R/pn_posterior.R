@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-#' rpn(40, 3, 2)
+#' rprojnorm(40, 3, 2)
 #'
 rprojnorm <- function(n, mu1 = 1, mu2 = 1) {
   muvec <- cbind(mu1, mu2)

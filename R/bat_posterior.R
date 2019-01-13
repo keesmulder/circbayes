@@ -61,6 +61,10 @@ plot.bat_posterior_mod <- function(x, ...) {
 }
 
 
+
+
+
+
 #' Posterior of the Power or Inverse Batschelet distribution.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
