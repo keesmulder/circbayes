@@ -65,6 +65,30 @@ plot.bat_posterior_mod <- function(x, ...) {
 
 
 
+marg_lik.bat_posterior_mod <- function(x, ...) {
+
+  sam <- posterior_samples(x)
+
+  lb <- c(-2*pi, 0, -1)
+  ub <- c(2*pi, Inf, 1)
+
+  names(lb) <- colnames(sam)
+  names(ub) <- colnames(sam)
+
+  bridgesampling::bridge_sampler(data = x$data,
+                                 samples = as.matrix(sam),
+                                 param_types = c("circular", "real", "real"),
+                                 log_posterior = x$log_posterior,
+                                 lb = lb, ub = ub, ...)
+
+}
+
+
+inf_crit.bat_posterior_mod <- function(x, ...) {
+  x$ic_mat
+}
+
+
 #' Posterior of the Power or Inverse Batschelet distribution.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -96,11 +120,38 @@ bat_posterior <- function(th,
 
   coef_batpost <- coef(res)
 
+  dbat_fun <- ifelse(bat_type == "inverse", dinvbat, dpowbat)
+
+  log_posterior <- function(pvec, data) {
+
+    mu   <- pvec[1]
+    kp   <- pvec[2]
+    lam  <- pvec[3]
+
+    ll_part    <- sum(dbat_fun(data, mu, kp, lam, log = TRUE))
+    prior_part <- sum(c(vapply(mu,   mu_logprior_fun,  0),
+                        vapply(kp,   kp_logprior_fun,  0),
+                        vapply(lam,  lam_logprior_fun, 0)))
+
+    ll_part + prior_part
+  }
+
+  # Set the environment of the log posterior function.
+  log_post_env <- new.env()
+  log_post_env$dbat_fun         <- dbat_fun
+  log_post_env$mu_logprior_fun  <- mu_logprior_fun
+  log_post_env$kp_logprior_fun  <- kp_logprior_fun
+  log_post_env$lam_logprior_fun <- lam_logprior_fun
+  environment(log_posterior) <- log_post_env
+
+
   batpost_res <- c(list(coef = coef_batpost),
                    res,
                    list(data = res$x))
 
-  class(batpost_res) <- c("bat_posterior_mod", class(batpost_res))
+  batpost_res$log_posterior <- log_posterior
+
+  class(batpost_res) <- c("bat_posterior_mod", class(res))
 
   batpost_res
 }
