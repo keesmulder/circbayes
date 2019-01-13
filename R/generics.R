@@ -45,6 +45,33 @@ inf_crit <- function(x, ...) {
 }
 
 
+
+#' Compute the Marginal likelihood of circular Bayesian models.
+#'
+#' For most models in \code{circbayes}, this uses \code{\link{bridgesampling}}.
+#'
+#' @param x Fit model object.
+#' @param ... Further arguments.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' th <- rvm(40, 5, 8)
+#' vm_mod <- vm_posterior(th)
+#' pn_mod <- pn_posterior(th)
+#' bt_mod <- bt_posterior(th)
+#' mlvm <- marg_lik(vm_mod)
+#' mlpn <- marg_lik(pn_mod)
+#' mlbt <- marg_lik(bat_mod)
+#'
+#' bht_compare(mlvm, mlpn, mlbt)
+#'
+marg_lik <- function(x, ...) {
+  UseMethod("marg_lik")
+}
+
+
 # This is the fall-back generic. If this doesn't work, a custom method must be
 # written.
 inf_crit.list <- function(x, ...) {
