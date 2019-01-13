@@ -187,9 +187,9 @@ vm_reg <- function(formula,
   res$parnames <- rownames(res$coef)
   res$data <- data
 
-  beta_names  <- colnames(mod$bt_mean)
-  delta_names <- colnames(mod$dt_meandir)
-  th_name     <- colnames(mod$data_th)
+  beta_names  <- colnames(res$bt_mean)
+  delta_names <- colnames(res$dt_meandir)
+  th_name     <- colnames(res$data_th)
 
   res$beta_names  <- beta_names
   res$delta_names <- delta_names
