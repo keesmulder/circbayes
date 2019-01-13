@@ -141,7 +141,7 @@ vm_reg <- function(formula,
                                Q = niter, ...)
 
 
-  res$call <- match.call()
+  res$Call <- match.call()
   res$coef <- coef(res)
   res$parnames <- rownames(res$coef)
   res$data <- data

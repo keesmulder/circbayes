@@ -11,7 +11,7 @@ LazyData: true
 Imports: flexcircmix, 
     bpnreg,
     circglmbayes,
-    BayesCircIsotropy,
+    bridgesampling,
     dirichletprocess,
     circular
 Suggests: covr,
