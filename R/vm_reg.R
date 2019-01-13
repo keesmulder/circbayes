@@ -140,6 +140,8 @@ vm_reg <- function(formula,
                                bt_prior_musd = beta_prior,
                                Q = niter, ...)
 
+
+  res$call <- match.call()
   res$coef <- coef(res)
   res$parnames <- rownames(res$coef)
   res$data <- data

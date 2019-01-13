@@ -95,8 +95,8 @@ pn_posterior <- function(th, niter = 1000, thin = 1, ...) {
 
   coef_pnpost <- bpnreg::coef_lin(res)
   rownames(coef_pnpost) <- c("mu1", "mu2")
-  res[["coef"]] <- coef_pnpost
-  res[["data"]] <- th
+  res$coef <- coef_pnpost
+  res$data <- th
 
   class(res) <- c("pn_posterior_mod", class(res))
 
