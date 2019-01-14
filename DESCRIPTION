@@ -18,3 +18,4 @@ Suggests: covr,
     testthat
 URL: https://github.com/keesmulder/circbayes
 BugReports: https://github.com/keesmulder/circbayes/issues
+RoxygenNote: 6.1.1
