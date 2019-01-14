@@ -47,24 +47,26 @@ posterior_samples.pn_reg_mod <- function(x) {
 
 plot.pn_reg_mod <- function(x, pred_name, ...) {
   # If no predictor name is chosen, pick the first.
-  if (missing(pred_name)) pred_name <- x$parnames[3]
+  if (missing(pred_name)) pred_name <- x$parnames[2L]
 
   x_bar <- colMeans(x$mm$XI)
-
-  pred_fun <- function(newx, params) {
+  pred_fun <- Vectorize(function(newx, params) {
     n_par <- length(params)
-    B1    <- params[1:(n_par/2)]
-    B2    <- params[(1 + (n_par/2)):n_par]
+    B1    <- params[1L:(n_par/2L)]
+    B2    <- params[(1L + (n_par/2L)):n_par]
     x_bar[pred_name] <- newx
     mu1 <- t(x_bar) %*% B1
     mu2 <- t(x_bar) %*% B2
     atan2(mu2, mu1)
-  }
+  }, vectorize.args = "newx")
 
+  pred_params <- c(paste0(names(x$estimates_B1), "_I"),
+                   paste0(names(x$estimates_B2), "_II"))
 
   plot_circbayes_regression(x, pred_name = pred_name,
                             pred_fun = pred_fun,
-                            fit_params = c(x$estimates_B1, x$estimates_B2), ...)
+                            fit_params = c(x$estimates_B1, x$estimates_B2),
+                            pred_params = pred_params, ...)
 }
 
 # Log posterior of pn.

@@ -280,23 +280,6 @@ plot_circbayes_univariate <- function(x,
 
 
 
-#' Plot a circular model.
-#'
-#'
-#' @param x
-#' @param pred_name
-#' @param add_data
-#' @param add_fit
-#' @param n_samples
-#' @param add_ci
-#' @param qpts
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
 plot_circbayes_regression <- function(x,
                                       pred_name,
                                       fit_params,
@@ -307,7 +290,7 @@ plot_circbayes_regression <- function(x,
                                       alpha_samples = .3,
                                       add_ci        = FALSE,
                                       qpts          = 100,
-                                      icept_name    = "Intercept",
+                                      pred_params   = c("Intercept", pred_name),
                                       ...) {
 
 
@@ -316,18 +299,18 @@ plot_circbayes_regression <- function(x,
 
 
   # Basic histogram without samples.
-  p <- ggplot2::ggplot(data.frame(th = as.circrad(x$data_th), x = x$data_X[, pred_name]))
+  p <- ggplot2::ggplot(data.frame(th = as.circrad(x$data_th), x = x$data_X[, pred_name]),
+                       mapping = ggplot2::aes_string(x = "x", y = "th"))
 
   if (add_data) {
     p <- p +
-      ggplot2::geom_point(
-        mapping = ggplot2::aes_string(x = "x", y = "th"))
+      ggplot2::geom_point()
   }
 
 
   # Add samples
   if (n_samples > 0) {
-    param_mat <- posterior_samples(x)[, c(icept_name, pred_name)]
+    param_mat <- posterior_samples(x)[, pred_params]
     p <- p + geom_mcmc_fun_sample(pred_fun,
                                   param_mat = param_mat,
                                   alpha = alpha_samples,
@@ -336,7 +319,7 @@ plot_circbayes_regression <- function(x,
 
 
   if (add_ci) {
-    param_mat <- posterior_samples(x)[, c(icept_name, pred_name)]
+    param_mat <- posterior_samples(x)[, pred_params]
     p <- p + geom_mcmc_ci_sample(pred_fun,
                                  param_mat = param_mat,
                                  qpts = min(qpts, nrow(param_mat)),
@@ -345,8 +328,6 @@ plot_circbayes_regression <- function(x,
 
 
   if (add_fit) {
-    b0_fit <- x$b0_meandir
-
     p <- p + ggplot2::stat_function(fun = pred_fun,
                                     args = list(params = fit_params),
                                     size = 1)
