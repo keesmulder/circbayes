@@ -115,13 +115,13 @@ inf_crit.pn_posterior_mod <- function(x, ...) {
 #' @examples
 #' pn_posterior(rprojnorm(30, 2, 5))
 #'
-pn_posterior <- function(th, niter = 1000, thin = 1, ...) {
+pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, L...) {
 
   df <- data.frame(th = as.circrad(th))
 
   # Run intercept-only Projected Normal regression model
   res <- bpnreg::bpnr(pred.I = th ~ 1, data = df, pred.II = th ~ 1,
-                      its = niter, n.lag = thin, ...)
+                      its = niter, n.lag = thin, burn = burnin, ...)
 
   coef_pnpost <- bpnreg::coef_lin(res)
   rownames(coef_pnpost) <- c("mu1", "mu2")

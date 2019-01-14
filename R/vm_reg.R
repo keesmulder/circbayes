@@ -108,8 +108,26 @@ posterior_samples.vm_reg_mod <- function(x) {
 }
 
 
-plot.vm_reg_mod <- function(x, ...) {
-  plot_circbayes_regression(x, ...)
+plot.vm_reg_mod <- function(x, pred_name, ...) {
+
+  # If no predictor name is chosen, pick the first.
+  if (missing(pred_name)) pred_name <- x$parnames[3]
+
+  # Check if the chosen predictor is delta or beta.
+  if (pred_name %in% colnames(x$bt_mean)) {
+    pred_fun <- single_pred_fun_beta
+    par_fit  <- x$bt_mean[, pred_name]
+  } else if (pred_name %in% colnames(x$dt_meandir)) {
+    pred_fun <- single_pred_fun_delta
+    par_fit  <- x$dt_meandir[, pred_name]
+  } else {
+    stop(paste("pred_name", pred_name, "not found."))
+  }
+
+  plot_circbayes_regression(x,
+                            pred_name = pred_name,
+                            fit_params = c(x$b0_meandir, par_fit),
+                            pred_fun = pred_fun, ...)
 }
 
 
@@ -184,7 +202,8 @@ vm_reg <- function(formula,
 
   res$Call <- match.call()
   res$coef <- coef(res)
-  res$parnames <- rownames(res$coef)
+  res$parnames  <- rownames(res$coef)
+  res$estimates <- res$coef[, 1]
   res$data <- data
 
   beta_names  <- colnames(res$bt_mean)
@@ -197,7 +216,6 @@ vm_reg <- function(formula,
 
   # Log posterior of vm_reg.
   log_posterior_vm_reg <- function(params, data) {
-    nms <- names(params)
     predfun <- predict_function_pars(beta_0 = params['Intercept'],
                                      beta   = params[beta_names],
                                      delta  = params[delta_names],

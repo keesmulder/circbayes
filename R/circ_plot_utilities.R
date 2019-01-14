@@ -299,27 +299,20 @@ plot_circbayes_univariate <- function(x,
 #'
 plot_circbayes_regression <- function(x,
                                       pred_name,
+                                      fit_params,
+                                      pred_fun,
                                       add_data      = TRUE,
                                       add_fit       = TRUE,
                                       n_samples     = 0,
                                       alpha_samples = .3,
                                       add_ci        = FALSE,
                                       qpts          = 100,
+                                      icept_name    = "Intercept",
                                       ...) {
 
-  # If no predictor name is chosen, pick the first.
-  if (missing(pred_name)) pred_name <- x$parnames[3]
 
-  # Check if the chosen predictor is delta or beta.
-  if (pred_name %in% colnames(x$bt_mean)) {
-    pred_fun <- single_pred_fun_beta
-    par_fit  <- x$bt_mean[, pred_name]
-  } else if (pred_name %in% colnames(x$dt_meandir)) {
-    pred_fun <- single_pred_fun_delta
-    par_fit  <- x$dt_meandir[, pred_name]
-  } else {
-    stop(paste("pred_name", pred_name, "not found."))
-  }
+
+
 
 
   # Basic histogram without samples.
@@ -334,7 +327,7 @@ plot_circbayes_regression <- function(x,
 
   # Add samples
   if (n_samples > 0) {
-    param_mat <- posterior_samples(x)[, c("Intercept", pred_name)]
+    param_mat <- posterior_samples(x)[, c(icept_name, pred_name)]
     p <- p + geom_mcmc_fun_sample(pred_fun,
                                   param_mat = param_mat,
                                   alpha = alpha_samples,
@@ -343,7 +336,7 @@ plot_circbayes_regression <- function(x,
 
 
   if (add_ci) {
-    param_mat <- posterior_samples(x)[, c("Intercept", pred_name)]
+    param_mat <- posterior_samples(x)[, c(icept_name, pred_name)]
     p <- p + geom_mcmc_ci_sample(pred_fun,
                                  param_mat = param_mat,
                                  qpts = min(qpts, nrow(param_mat)),
@@ -355,7 +348,7 @@ plot_circbayes_regression <- function(x,
     b0_fit <- x$b0_meandir
 
     p <- p + ggplot2::stat_function(fun = pred_fun,
-                                    args = list(params = c(b0_fit, par_fit)),
+                                    args = list(params = fit_params),
                                     size = 1)
   }
 
