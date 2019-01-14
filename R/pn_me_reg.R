@@ -34,87 +34,14 @@ predict.pn_me_reg_mod <- function(object, newdata, ...) {
 
 
 posterior_samples.pn_me_reg_mod <- function(x) {
-  B1 <- x$B1
-  B2 <- x$B2
-  colnames(B1) <- paste0(colnames(B1), "_I")
-  colnames(B2) <- paste0(colnames(B2), "_II")
-  cbind(B1, B2)
+  B1 <- x$B.I
+  B2 <- x$B.II
+  Beta1 <- x$Beta.I
+  Beta2 <- x$Beta.II
+
+  list(B1, B2, Beta1, Beta2)
 }
 
-
-# Prediction function with one (pred_name) changing predictor.
-one_predict_function_pn_me_reg <- function(x, pred_name) {
-
-  x_bar <- colMeans(x$mm$XI)
-  pred_fun <- Vectorize(function(newx, params) {
-    n_par <- length(params)
-    B1    <- params[1L:(n_par/2L)]
-    B2    <- params[(1L + (n_par/2L)):n_par]
-    x_bar[pred_name] <- newx
-    mu1 <- t(x_bar) %*% B1
-    mu2 <- t(x_bar) %*% B2
-    atan2(mu2, mu1)
-  }, vectorize.args = "newx")
-  return(pred_fun)
-}
-
-
-# Predict function with changing parameters.
-predict_pn_given_params <- function(params, data) {
-  n_par <- length(params)
-  B1    <- params[1L:(n_par/2L), drop = FALSE]
-  B2    <- params[(1L + (n_par/2L)):n_par, drop = FALSE]
-
-  X <- as.matrix(cbind("(Intercept)" = 1, data[, names(B1)[-1]]))
-
-  mu1 <- X %*% B1
-  mu2 <- X %*% B2
-  return(data.frame(mu1 = mu1, mu2 = mu2))
-}
-
-
-
-plot.pn_me_reg_mod <- function(x, pred_name, ...) {
-  # If no predictor name is chosen, pick the first.
-  if (missing(pred_name)) pred_name <- x$parnames[2L]
-
-  pred_fun <- one_predict_function_pn_me_reg(x, pred_name)
-
-  pred_params <- c(paste0(names(x$estimates_B1), "_I"),
-                   paste0(names(x$estimates_B2), "_II"))
-
-  plot_circbayes_regression(x, pred_name = pred_name,
-                            pred_fun = pred_fun,
-                            fit_params = c(x$estimates_B1, x$estimates_B2),
-                            pred_params = pred_params, ...)
-}
-
-marg_lik.pn_me_reg_mod <- function(x, ...) {
-
-  sam <- posterior_samples(x)
-  nms <- rep(x$parnames, 2)
-  colnames(sam) <- nms
-
-  n_par <- ncol(sam)
-
-  lb <- rep(-Inf, n_par)
-  ub <- rep( Inf, n_par)
-
-  names(lb) <- nms
-  names(ub) <- nms
-
-  partypes <- rep("real", n_par)
-
-  bsobj <- bridgesampling::bridge_sampler(data = x$data,
-                                          samples = as.matrix(sam),
-                                          param_types = partypes,
-                                          log_posterior = x$log_posterior,
-                                          lb = lb, ub = ub,
-                                          silent = TRUE,
-                                          ...)
-
-  bridgesampling::logml(bsobj)
-}
 
 
 inf_crit.pn_me_reg_mod <- function(x, ...) {
