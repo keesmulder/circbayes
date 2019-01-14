@@ -2,38 +2,38 @@
 
 
 
-print.pn_reg_mod <- function(x, ...) {
+print.pn_me_reg_mod <- function(x, ...) {
   NextMethod()
 }
 
 
 #' @importFrom bpnreg coef_lin
-coef_lin.pn_reg_mod <- function(object) {
+coef_lin.pn_me_reg_mod <- function(object) {
   # list(lin_I  = object$lin.coef.I,
   #      lin_II = object$lin.coef.II)
   NextMethod()
 }
 
 #' @importFrom bpnreg coef_circ
-coef_circ.pn_reg_mod <- function(object, ...) {
+coef_circ.pn_me_reg_mod <- function(object, ...) {
   # object$circ.coef
   NextMethod()
 }
 
 
-coef.pn_reg_mod <- coefficients.pn_reg_mod <- function(object, ...) {
+coef.pn_me_reg_mod <- coefficients.pn_me_reg_mod <- function(object, ...) {
   list(linear = coef_lin(object), circular = coef_circ(object))
 }
 
 
 
-predict.pn_reg_mod <- function(object, newdata, ...) {
+predict.pn_me_reg_mod <- function(object, newdata, ...) {
   NextMethod()
 }
 
 
 
-posterior_samples.pn_reg_mod <- function(x) {
+posterior_samples.pn_me_reg_mod <- function(x) {
   B1 <- x$B1
   B2 <- x$B2
   colnames(B1) <- paste0(colnames(B1), "_I")
@@ -43,7 +43,7 @@ posterior_samples.pn_reg_mod <- function(x) {
 
 
 # Prediction function with one (pred_name) changing predictor.
-one_predict_function_pn_reg <- function(x, pred_name) {
+one_predict_function_pn_me_reg <- function(x, pred_name) {
 
   x_bar <- colMeans(x$mm$XI)
   pred_fun <- Vectorize(function(newx, params) {
@@ -74,11 +74,11 @@ predict_pn_given_params <- function(params, data) {
 
 
 
-plot.pn_reg_mod <- function(x, pred_name, ...) {
+plot.pn_me_reg_mod <- function(x, pred_name, ...) {
   # If no predictor name is chosen, pick the first.
   if (missing(pred_name)) pred_name <- x$parnames[2L]
 
-  pred_fun <- one_predict_function_pn_reg(x, pred_name)
+  pred_fun <- one_predict_function_pn_me_reg(x, pred_name)
 
   pred_params <- c(paste0(names(x$estimates_B1), "_I"),
                    paste0(names(x$estimates_B2), "_II"))
@@ -89,7 +89,7 @@ plot.pn_reg_mod <- function(x, pred_name, ...) {
                             pred_params = pred_params, ...)
 }
 
-marg_lik.pn_reg_mod <- function(x, ...) {
+marg_lik.pn_me_reg_mod <- function(x, ...) {
 
   sam <- posterior_samples(x)
   nms <- rep(x$parnames, 2)
@@ -117,7 +117,7 @@ marg_lik.pn_reg_mod <- function(x, ...) {
 }
 
 
-inf_crit.pn_reg_mod <- function(x, ...) {
+inf_crit.pn_me_reg_mod <- function(x, ...) {
   ics <- x$model.fit
   if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
     ic_df <- t(data.frame(ics))
@@ -128,7 +128,7 @@ inf_crit.pn_reg_mod <- function(x, ...) {
   }
 }
 
-#' Bayesian inference for Projected Normal regression.
+#' Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.
@@ -137,26 +137,26 @@ inf_crit.pn_reg_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
-#' @return A \code{pn_reg_mod} object.
+#' @return A \code{pn_me_reg_mod} object.
 #' @export
 #'
 #' @examples
-#' pn_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))
+#' pn_me_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))
 #'
-pn_reg <- function(formula,
-                   data,
-                   niter = 1000,
-                   thin = 1,
-                   burnin = 0,
-                   ...) {
+pn_me_reg <- function(formula,
+                      data,
+                      niter = 1000,
+                      thin = 1,
+                      burnin = 0,
+                      ...) {
 
   if (is.matrix(data)) data <- data.frame(data)
 
-  # Run Projected Normal regression model
-  res <- bpnreg::bpnr(pred.I = formula, data = data,
+  # Run intercept-only Hierarchical Projected Normal regression model
+  res <- bpnreg::bpnme(pred.I = formula, data = data,
                       its = niter, n.lag = thin, burn = burnin, ...)
 
-  class(res) <- c("pn_reg_mod", class(res))
+  class(res) <- c("pn_me_reg_mod", class(res))
 
   res$coef <- coef(res)
   res$data <- data
@@ -168,8 +168,8 @@ pn_reg <- function(formula,
   res$estimates <- c(res$estimates_B1, res$estimates_B2)
   res$th_name <- as.character(formula)[2]
 
-  # # Log posterior of pn_reg.
-  log_posterior_pn_reg <- function(params, data) {
+  # # Log posterior of pn_me_reg.
+  log_posterior_pn_me_reg <- function(params, data) {
     mus <- predict_pn_given_params(params, data)
 
     sum(dprojnorm(data[, th_name], mu1 = mus$mu1, mu2 = mus$mu2, log = TRUE))
@@ -177,10 +177,10 @@ pn_reg <- function(formula,
   # Set the environment of the log posterior function.
   log_post_env             <- new.env()
   log_post_env$th_name     <- res$th_name
-  environment(log_posterior_pn_reg) <- log_post_env
-  res$log_posterior <- log_posterior_pn_reg
+  environment(log_posterior_pn_me_reg) <- log_post_env
+  res$log_posterior <- log_posterior_pn_me_reg
 
-  class(res) <- c("pn_reg_mod", class(res))
+  class(res) <- c("pn_me_reg_mod", class(res))
 
   res
 }
