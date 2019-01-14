@@ -156,8 +156,10 @@ vm_mix <- function(th,
     kps   <- params[(n_comp + 1):(2*n_comp)]
     alphs <- params[(2*n_comp + 1):(3*n_comp)]
 
-    if (!identical(sum(alphs), 1)) {
+    if (abs(sum(alphs) - 1) > .5) {
       warning("Log-posterior adapting weight vector alpha to sum to one.")
+      alphs <- alphs / sum(alphs)
+    } else {
       alphs <- alphs / sum(alphs)
     }
 
