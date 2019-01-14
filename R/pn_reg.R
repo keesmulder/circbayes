@@ -22,7 +22,7 @@ coef_circ.pn_reg_mod <- function(object, ...) {
 
 
 coef.pn_reg_mod <- coefficients.pn_reg_mod <- function(object, ...) {
-  c(coef_lin(object), list(circ = coef_circ(object)))
+  list(linear = coef_lin(object), circular = coef_circ(object))
 }
 
 
@@ -114,7 +114,18 @@ log_posterior_pn_reg <- function(params, data) {
 # }
 
 
-#' Posterior of the von Mises distribution.
+inf_crit.pn_reg_mod <- function(x, ...) {
+  ics <- x$model.fit
+  if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
+    ic_df <- t(data.frame(ics))
+    colnames(ic_df) <- "value"
+    return(ic_df)
+  } else {
+    return(ics)
+  }
+}
+
+#' Bayesian inference for Projected Normal regression.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.

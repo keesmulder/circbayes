@@ -30,6 +30,7 @@ test_that("Information criteria", {
 })
 
 test_that("Hypothesis testing", {
+  set.seed(35)
   expect_is(marg_lik(mod), "numeric")
 })
 

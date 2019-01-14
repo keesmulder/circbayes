@@ -18,16 +18,16 @@ test_that("Posterior sampling", {
 
   expect_is(mod,        "pn_reg_mod")
   expect_is(plot(mod),  "gg")
-  expect_is(coef(mod),  "matrix")
+  expect_is(coef(mod),  "list")
 
   expect_is(mod2,       "pn_reg_mod")
   expect_is(plot(mod2), "gg")
-  expect_is(coef(mod2), "matrix")
+  expect_is(coef(mod2), "list")
 })
 
 
 test_that("Predict", {
-  expect_is(predict_function(mod)(newdata = as.matrix(th_df)), "matrix")
+  expect_is(predict(mod, newdata = as.matrix(th_df)), "matrix")
 })
 
 
@@ -36,9 +36,9 @@ test_that("Information criteria", {
   expect_error(inf_crit(mod), NA)
 })
 
-test_that("Hypothesis testing", {
-  expect_is(marg_lik(mod), "numeric")
-})
+# test_that("Hypothesis testing", {
+#   expect_is(marg_lik(mod), "numeric")
+# })
 
 
 

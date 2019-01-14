@@ -183,29 +183,6 @@ gg_inside_labels <- function(units = "degrees", nticks = 4,
 
 
 
-
-#' Plot a circular model.
-#'
-#' @param x
-#' @param polar_coord
-#' @param add_data
-#' @param add_fit
-#' @param n_samples
-#' @param add_ci
-#' @param bins
-#' @param r
-#' @param ymax
-#' @param start
-#' @param direction
-#' @param pdf_fun
-#' @param qpts
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
 plot_circbayes_univariate <- function(x,
                                       pdf_fun     = dvm,
                                       polar_coord = TRUE,

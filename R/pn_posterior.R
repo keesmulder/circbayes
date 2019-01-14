@@ -86,8 +86,6 @@ marg_lik.pn_posterior_mod <- function(x, ...) {
 
 
 
-# This is the fall-back generic. If this doesn't work, a custom method must be
-# written.
 inf_crit.pn_posterior_mod <- function(x, ...) {
   ics <- x$model.fit
   if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
@@ -115,7 +113,7 @@ inf_crit.pn_posterior_mod <- function(x, ...) {
 #' @examples
 #' pn_posterior(rprojnorm(30, 2, 5))
 #'
-pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, L...) {
+pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
 
   df <- data.frame(th = as.circrad(th))
 

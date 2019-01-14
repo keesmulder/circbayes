@@ -166,7 +166,7 @@ marg_lik.vm_reg_mod <- function(x, ...) {
 
 
 
-#' Posterior of the von Mises distribution.
+#' Bayesian inference for von Mises regression.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.
