@@ -4,9 +4,10 @@
 \alias{plot_circbayes_regression}
 \title{Plot a circular model.}
 \usage{
-plot_circbayes_regression(x, pred_name, fit_params, add_data = TRUE,
-  add_fit = TRUE, n_samples = 0, alpha_samples = 0.3,
-  add_ci = FALSE, qpts = 100, icept_name = "Intercept", ...)
+plot_circbayes_regression(x, pred_name, fit_params, pred_fun,
+  add_data = TRUE, add_fit = TRUE, n_samples = 0,
+  alpha_samples = 0.3, add_ci = FALSE, qpts = 100,
+  icept_name = "Intercept", ...)
 }
 \arguments{
 \item{...}{}

@@ -8,7 +8,7 @@ print.pn_reg_mod <- function(x, ...) {
 
 
 #' @importFrom bpnreg coef_lin
-coef_lin.pn_reg_mod <- function(object, ...) {
+coef_lin.pn_reg_mod <- function(object) {
   # list(lin_I  = object$lin.coef.I,
   #      lin_II = object$lin.coef.II)
   NextMethod()
@@ -22,7 +22,7 @@ coef_circ.pn_reg_mod <- function(object, ...) {
 
 
 coef.pn_reg_mod <- coefficients.pn_reg_mod <- function(object, ...) {
-  c(coef_lin.pn_reg_mod(object), list(circ = coef_circ.pn_reg_mod(object)))
+  c(coef_lin(object), list(circ = coef_circ(object)))
 }
 
 
@@ -42,8 +42,29 @@ posterior_samples.pn_reg_mod <- function(x) {
 }
 
 
-plot.pn_reg_mod <- function(x, ...) {
-  plot_circbayes_regression(x, ...)
+
+
+
+plot.pn_reg_mod <- function(x, pred_name, ...) {
+  # If no predictor name is chosen, pick the first.
+  if (missing(pred_name)) pred_name <- x$parnames[3]
+
+  x_bar <- colMeans(x$mm$XI)
+
+  pred_fun <- function(newx, params) {
+    n_par <- length(params)
+    B1    <- params[1:(n_par/2)]
+    B2    <- params[(1 + (n_par/2)):n_par]
+    x_bar[pred_name] <- newx
+    mu1 <- t(x_bar) %*% B1
+    mu2 <- t(x_bar) %*% B2
+    atan2(mu2, mu1)
+  }
+
+
+  plot_circbayes_regression(x, pred_name = pred_name,
+                            pred_fun = pred_fun,
+                            fit_params = c(x$estimates_B1, x$estimates_B2), ...)
 }
 
 # Log posterior of pn.
@@ -125,6 +146,8 @@ pn_reg <- function(formula,
   res$parnames <- colnames(res$B1)
   res$data_th <- res$theta
   res$data_X  <- res$mm$XI
+  res$estimates_B1 <- res$lin.coef.I[, 2]
+  res$estimates_B2 <- res$lin.coef.II[, 2]
 
   # # Log posterior of pn_reg.
   # log_posterior_pn_reg <- function(params, data) {
