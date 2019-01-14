@@ -74,7 +74,6 @@ geom_mcmc_ci_sample <- function(fun, param_mat,
   probstr         <- colnames(q_mat)
   q_df            <- data.frame(cbind(x_grid = x_grid, q_mat))
 
-  print(probstr)
   geoms <- lapply(probstr, function(probi) {
     if (probi == "CI_50") {
       return(ggplot2::geom_line(data = q_df,

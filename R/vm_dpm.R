@@ -16,8 +16,7 @@ posterior_samples.vm_dpm_mod <- function(x) {
 
 
 plot.vm_dpm_mod <- function(x, ...) {
-  NextMethod()
-  # plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
+  plot_circbayes_dpm(x, ...)
 }
 
 

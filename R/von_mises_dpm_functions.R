@@ -89,10 +89,10 @@ vonMisesMixtureCreate <- function(priorParameters,
 
 
 # Helper function, log of a bessel function.
-logBesselI <- function(x, nu) log(besselI(x, nu, expon.scaled = TRUE)) + x
+logBesselI <- function(x, nu = 0) log(besselI(x, nu, expon.scaled = TRUE)) + x
 
 # von Mises
-dvm <- Vectorize(function(x, mu, kp) {
+dvm_vec <- Vectorize(function(x, mu, kp) {
   logpdf <- kp * cos(x - mu) - log(2*pi) - logBesselI(kp, 0)
   return(exp(logpdf))
 })
@@ -184,7 +184,7 @@ PosteriorParameters.vonmises <- function(mdobj, x) {
 
 
 
-Likelihood.vonmises <- function(mdobj, x, theta) dvm(x, theta[[1]], theta[[2]])
+Likelihood.vonmises <- function(mdobj, x, theta) dvm_vec(x, theta[[1]], theta[[2]])
 
 
 one_vm_post_draw <- function(mun, rn, m, nsamp = 3) {
