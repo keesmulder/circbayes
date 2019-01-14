@@ -1,6 +1,6 @@
 context("Von Mises Regression")
 
-set.seed(10)
+set.seed(11)
 
 th_df <- rvm_reg(30, beta = .5, kp = 50)
 
@@ -9,7 +9,7 @@ test_that("Random generation", {
   expect_is(th_df, "matrix")
 })
 
-mod  <- vm_reg(th ~ ., data = th_df, burnin = 0, niter = 50)
+mod  <- vm_reg(th ~ ., data = th_df, burnin = 0, niter = 100)
 mod2 <- vm_reg(th ~ .,
                data = th_df,
                burnin = 0,

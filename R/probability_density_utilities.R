@@ -43,6 +43,7 @@ geom_mcmc_fun_sample <- function(fun, param_mat, n_funs = 100,
 geom_mcmc_ci_sample <- function(fun, param_mat,
                                 x_grid = seq(-pi, pi, length.out = 360),
                                 qpts = 100, ci_size = .95,
+                                add_median = FALSE,
                                 ...) {
 
   # If the pdf is not of fun(x, params) form, refactor the function so it is.
@@ -62,17 +63,30 @@ geom_mcmc_ci_sample <- function(fun, param_mat,
   })
 
   # Quantile probabilities
-  probs <- c((1 - ci_size)/2,  1 - (1 - ci_size)/2)
+  if (add_median) {
+    probs <- c((1 - ci_size)/2, .5, 1 - (1 - ci_size)/2)
+  } else {
+    probs <- c((1 - ci_size)/2,  1 - (1 - ci_size)/2)
+  }
 
   q_mat           <- t(apply(prob_mat, 1, quantile, probs = probs, na.rm = TRUE))
   colnames(q_mat) <- paste0("CI_", gsub("%", "", colnames(q_mat)))
   probstr         <- colnames(q_mat)
   q_df            <- data.frame(cbind(x_grid = x_grid, q_mat))
 
-  return(list(
-    ggplot2::geom_line(data = q_df, mapping = ggplot2::aes_string(x = "x_grid", y = probstr[1]), ...),
-    ggplot2::geom_line(data = q_df, mapping = ggplot2::aes_string(x = "x_grid", y = probstr[2]), ...)
-  ))
+  print(probstr)
+  geoms <- lapply(probstr, function(probi) {
+    if (probi == "CI_50") {
+      return(ggplot2::geom_line(data = q_df,
+                                mapping = ggplot2::aes_string(x = "x_grid",
+                                                              y = probi),
+                                linetype = "solid"))
+    } else {
+      return(ggplot2::geom_line(data = q_df,
+                                mapping = ggplot2::aes_string(x = "x_grid",
+                                                              y = probi), ...))
+
+    }
+  })
+  return(geoms)
 }
-
-

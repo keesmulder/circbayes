@@ -90,8 +90,7 @@ bridge_sampler.bat_mix_mod <- function(samples, ...) {
 
 marg_lik.bat_mix_mod <- function(x, ...) {
 
-  bsobj <- bridgesampling::bridge_sampler(samples = x,
-                                          ...)
+  bsobj <- bridgesampling::bridge_sampler(samples = x, ...)
 
   bridgesampling::logml(bsobj)
 }

@@ -217,8 +217,6 @@ plot_circbayes_univariate <- function(x,
         boundary = -pi, binwidth = 2 * pi / bins)
   }
 
-
-
   if (n_samples > 0) {
     param_mat <- posterior_samples(x)
     p <- p + geom_mcmc_fun_sample(pdf_fun,
@@ -226,7 +224,6 @@ plot_circbayes_univariate <- function(x,
                                   alpha = .1,
                                   n_funs = min(nrow(param_mat), n_samples))
   }
-
 
   if (add_ci) {
     param_mat <- posterior_samples(x)
@@ -236,14 +233,12 @@ plot_circbayes_univariate <- function(x,
                                  linetype = "dashed")
   }
 
-
   if (add_fit) {
     # Add pdf of posterior estimates
     p <- p + ggplot2::stat_function(fun = pdf_fun,
                                     args = list(params = coef(x)[, 1]),
                                     size = 1)
   }
-
 
   if (polar_coord) {
     p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
@@ -254,6 +249,65 @@ plot_circbayes_univariate <- function(x,
   return(p)
 }
 
+
+
+
+
+plot_circbayes_dpm <- function(x,
+                               polar_coord = TRUE,
+                               add_data    = TRUE,
+                               n_samples   = 50,
+                               add_ci      = FALSE,
+                               bins        = 90,
+                               r = 3,
+                               ymax = NA,
+                               add_median  = TRUE,
+                               qpts        = 100,
+                               start       = pi/2,
+                               direction   = -1,
+                               ...) {
+
+  # pdf fun of DPM models.
+  pdf_fun <- function(xpt, params) {
+    ind <- sample(1:x$niter, 1)
+    dirichletprocess::PosteriorFunction(x, ind)(xpt)
+  }
+
+
+  # Basic histogram without samples.
+  p <- ggplot2::ggplot(data.frame(x = as.circrad(x$data)))
+
+  if (add_data) {
+    p <- p +
+      ggplot2::geom_histogram(
+        mapping = ggplot2::aes_string(x = "x", y = "..density.."),
+        fill = grDevices::rgb(.65, .65, .85, .3), col = "white",
+        boundary = -pi, binwidth = 2 * pi / bins)
+  }
+
+  if (n_samples > 0) {
+    p <- p + geom_mcmc_fun_sample(pdf_fun,
+                                  param_mat = matrix(NA, nrow = n_samples),
+                                  alpha = .1,
+                                  n_funs = n_samples)
+  }
+
+  if (add_ci) {
+    p <- p + geom_mcmc_ci_sample(pdf_fun,
+                                 param_mat = matrix(NA, nrow = qpts),
+                                 qpts = min(qpts, x$niter),
+                                 add_median = add_median,
+                                 linetype = "dashed")
+  }
+
+  if (polar_coord) {
+    p <- p + gg_circular_elems(r, ymax, start, direction) + gg_inside_labels(limits = c(-pi, pi), ...)
+  } else {
+    p <- p + ggplot2::coord_cartesian(...)
+  }
+
+  return(p)
+}
 
 
 
