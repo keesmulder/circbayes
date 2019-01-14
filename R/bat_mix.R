@@ -1,4 +1,24 @@
-
+#' Random generation for the Inverse Batschelet mixture distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mus Mean directions.
+#' @param kps Concentration parameters.
+#' @param lams Lambdas, peakedness parameter, between -1 and 1. Positive values
+#'   give a peaked density, while negative values give flat-topped densities. .
+#' @param alphs Mixture weights.
+#'
+#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
+#'   distribution, in radians.
+#' @export
+#'
+#' @examples
+#' hist(rinvbatmix(1000), breaks = 100)
+#'
+rinvbatmix <- function(n,
+                       mus = -1:1, kps = c(50, 25, 10),
+                       lams = c(-.4, 0, .6), alphs = c(.2, .2, .6)) {
+  circrad(flexcircmix::rinvbatmix(n, mus, kps, lams, alphs))
+}
 
 print.bat_mix_mod <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))
@@ -97,21 +117,27 @@ inf_crit.bat_mix_mod <- function(x, ...) {
 #'
 bat_mix <- function(th,
                     bat_type = "power",
-                    n_comp = 2,
+                    n_comp = 3,
                     mu_logprior_fun  = function(mu)  0,
                     kp_logprior_fun  = function(kp)  0,
                     lam_logprior_fun = function(lam) 0,
+                    alph_prior_param = rep(1, n_comp),
+                    fixed_pmat       = matrix(NA, n_comp, 4),
                     niter = 1000, ...) {
 
   th <- as.circrad(th)
 
-  # Run single component Power or Inverse Batschelet mixture model.
+
+
+  # Run  Power or Inverse Batschelet mixture model.
   res <- flexcircmix::fitbatmix(x = th, method = "bayes", Q = niter,
                                 n_comp = n_comp,
                                 bat_type = bat_type,
+                                fixed_pmat = fixed_pmat,
                                 mu_logprior_fun  = mu_logprior_fun,
                                 kp_logprior_fun  = kp_logprior_fun,
-                                lam_logprior_fun = lam_logprior_fun, ...)
+                                lam_logprior_fun = lam_logprior_fun,
+                                alph_prior_param = alph_prior_param, ...)
 
   coef_batpost <- coef(res)
 
