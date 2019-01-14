@@ -2,7 +2,7 @@
 % Please edit documentation in R/pn_reg.R
 \name{pn_reg}
 \alias{pn_reg}
-\title{Posterior of the von Mises distribution.}
+\title{Bayesian inference for Projected Normal regression.}
 \usage{
 pn_reg(formula, data, niter = 1000, thin = 1, burnin = 0, ...)
 }
@@ -17,9 +17,13 @@ pn_reg(formula, data, niter = 1000, thin = 1, burnin = 0, ...)
 \item{prior}{Numeric of length 3. Prior parameters for conjugate prior of the
 von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
+\value{
+A \code{pn_reg_mod} object.
+}
 \description{
-Posterior of the von Mises distribution.
+Bayesian inference for Projected Normal regression.
 }
 \examples{
+pn_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))
 
 }

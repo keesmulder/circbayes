@@ -4,7 +4,7 @@
 \alias{pn_posterior}
 \title{Posterior of the Projected Normal distribution.}
 \usage{
-pn_posterior(th, niter = 1000, thin = 1, burnin = 0, L...)
+pn_posterior(th, niter = 1000, thin = 1, burnin = 0, ...)
 }
 \arguments{
 \item{th}{Circular observations, either \code{numeric} in radians, or
