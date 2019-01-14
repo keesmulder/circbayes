@@ -1,13 +1,16 @@
 context("Batschelet")
 
-th <- rinvbat(20, 5, 6, .5)
+set.seed(36)
+
+th <- rinvbat(50, 5, 6, .1)
 
 test_that("Random generation", {
-  expect_length(th, 20)
+  expect_length(th, 50)
   expect_is(th, "numeric")
 })
 
-mod  <- bat_posterior(th, niter = 10)
+
+mod  <- bat_posterior(th, niter = 40)
 mod2 <- bat_posterior(th, niter = 10,
                       mu_logprior_fun  = function(mu)  0,
                       kp_logprior_fun  = function(kp)  dgamma(kp, 2, 0.2, log = TRUE),
@@ -30,7 +33,9 @@ test_that("Information criteria", {
 })
 
 test_that("Hypothesis testing", {
-  set.seed(35)
+
+  expect_is(mod$log_posterior(mod$estimates, data = th), "numeric")
+
   expect_is(marg_lik(mod), "numeric")
 })
 

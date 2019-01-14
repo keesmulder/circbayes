@@ -125,6 +125,8 @@ pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
   rownames(coef_pnpost) <- c("mu1", "mu2")
   res$coef <- coef_pnpost
   res$data <- th
+  res$estimates <- coef_pnpost[, 2L]
+  res$log_posterior <- log_posterior_pn
 
   class(res) <- c("pn_posterior_mod", class(res))
 

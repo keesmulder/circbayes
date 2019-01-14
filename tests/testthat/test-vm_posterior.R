@@ -36,6 +36,7 @@ test_that("Information criteria", {
 })
 
 test_that("Hypothesis testing", {
+  expect_is(mod$log_posterior(mod$estimates, data = conj_posterior_vm(th)), "numeric")
   expect_is(marg_lik(mod), "numeric")
 })
 

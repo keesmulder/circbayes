@@ -51,7 +51,7 @@ posterior_samples.vm_posterior_mod <- function(x) {
 }
 
 
-conj_posterior_vm <- function(th, prior) {
+conj_posterior_vm <- function(th, prior = c(0, 0, 0)) {
   mu_0 <- prior[1]
   R_0  <- prior[2]
   n_0  <- prior[3]
@@ -89,6 +89,7 @@ marg_lik.vm_posterior_mod <- function(x, method = "integrate", ...) {
     }
 
     return(c(log_marg_lik = log(integrate(marg_post_vm, 0, Inf)$value)))
+
   } else if (method == "bridgesampling") {
 
 
@@ -159,6 +160,8 @@ vm_posterior <- function(th, prior = c(0, 0, 0), niter = 1000, ...) {
                      data          = res$data_th,
                      prior         = prior,
                      post_params   = post_params,
+                     log_posterior = log_posterior_vm,
+                     estimates     = c(res$b0_meandir, res$kp_mode),
                      AIC_Bayes     = res$AIC_Bayes,
                      p_DIC         = res$p_DIC,
                      p_DIC_alt     = res$p_DIC_alt,

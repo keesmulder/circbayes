@@ -7,7 +7,7 @@ test_that("Random generation", {
   expect_is(th_df, "data.frame")
 })
 
-mod  <- pn_reg(th ~ ., data = th_df, burnin = 0, niter = 20)
+mod  <- pn_reg(th ~ ., data = th_df, burnin = 0, niter = 50)
 mod2 <- pn_reg(th ~ .,
                data = as.matrix(th_df),
                burnin = 10,
@@ -36,9 +36,10 @@ test_that("Information criteria", {
   expect_error(inf_crit(mod), NA)
 })
 
-# test_that("Hypothesis testing", {
-#   expect_is(marg_lik(mod), "numeric")
-# })
+test_that("Hypothesis testing", {
+  expect_is(mod$log_posterior(params = mod$estimates, data = th_df), "numeric")
+  expect_is(marg_lik(mod), "numeric")
+})
 
 
 

@@ -1,5 +1,8 @@
 context("Projected Normal")
 
+set.seed(36)
+
+
 th <- rprojnorm(100, 4, 2)
 
 test_that("Random generation", {
@@ -11,7 +14,7 @@ test_that("Random generation", {
   hist(rprojnorm(100000), breaks = 1000)
 })
 
-mod  <- pn_posterior(th, niter = 10)
+mod  <- pn_posterior(th, niter = 50)
 mod2 <- pn_posterior(th, niter = 10, thin = 2)
 
 test_that("Posterior sampling", {
@@ -33,6 +36,7 @@ test_that("Information criteria", {
 })
 
 test_that("Hypothesis testing", {
+  expect_is(mod$log_posterior(mod$estimates, data = th), "numeric")
   expect_is(marg_lik(mod), "numeric")
 })
 
