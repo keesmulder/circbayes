@@ -2,7 +2,7 @@ context("Von Mises mixtures")
 
 set.seed(36)
 
-th <- rinvbatmix(50, 5, 6, .1)
+th <- rvmmix(50)
 
 test_that("Random generation", {
   expect_length(th, 50)
@@ -10,19 +10,19 @@ test_that("Random generation", {
 })
 
 
-mod  <- bat_mix(th, niter = 40, n_comp = 3)
-mod2 <- bat_mix(th, niter = 10,
+mod  <- vm_mix(th, niter = 40, n_comp = 3)
+mod2 <- vm_mix(th, niter = 10,
                       mu_logprior_fun  = function(mu)  0,
                       kp_logprior_fun  = function(kp)  dgamma(kp, 2, 0.2, log = TRUE),
                       lam_logprior_fun = function(lam) 0)
 
 test_that("Posterior sampling", {
 
-  expect_is(mod,        "bat_mix_mod")
+  expect_is(mod,        "vm_mix_mod")
   expect_is(plot(mod),  "gg")
   expect_is(coef(mod),  "matrix")
 
-  expect_is(mod2,       "bat_mix_mod")
+  expect_is(mod2,       "vm_mix_mod")
   expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
 })

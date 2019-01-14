@@ -2,7 +2,7 @@ context("Batschelet mixtures")
 
 set.seed(36)
 
-th <- rinvbat(50, 5, 6, .1)
+th <- rinvbatmix(50)
 
 test_that("Random generation", {
   expect_length(th, 50)

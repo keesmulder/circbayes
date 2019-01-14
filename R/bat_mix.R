@@ -139,16 +139,12 @@ bat_mix <- function(th,
                                 lam_logprior_fun = lam_logprior_fun,
                                 alph_prior_param = alph_prior_param, ...)
 
-  coef_batpost <- coef(res)
-
-  # dbat_fun <- ifelse(bat_type == "inverse", dinvbat, dpowbat)
 
 
-
-  batpost_res <- c(list(coef = coef_batpost),
-                   res,
+  batpost_res <- c(res,
                    list(data = res$x))
 
+  batpost_res$dbat_fun   <- ifelse(bat_type == "inverse", dinvbat, dpowbat)
   batpost_res$mu_names   <- paste0("mu_", seq(n_comp))
   batpost_res$kp_names   <- paste0("kp_", seq(n_comp))
   batpost_res$lam_names  <- paste0("lam_", seq(n_comp))
