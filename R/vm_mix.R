@@ -1,3 +1,23 @@
+#' Random generation for the Inverse Batschelet mixture distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mus Mean directions.
+#' @param kps Concentration parameters.
+#' @param lams Lambdas, peakedness parameter, between -1 and 1. Positive values
+#'   give a peaked density, while negative values give flat-topped densities. .
+#' @param alphs Mixture weights.
+#'
+#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
+#'   distribution, in radians.
+#' @export
+#'
+#' @examples
+#' hist(rvmmix(1000), breaks = 100)
+#'
+rvmmix <- function(n, mus = -1:1, kps = c(50, 25, 10), alphs = c(.2, .2, .6)) {
+  circrad(flexcircmix::rinvbatmix(n, mus, kps,
+                                  lams = rep(0, length(mus)), alphs))
+}
 
 
 print.vm_mix_mod <- function(x, digits = 3, ...) {
