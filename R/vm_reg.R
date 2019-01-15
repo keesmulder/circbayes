@@ -143,7 +143,9 @@ print.vm_reg_mod <- function(x, ...) {
 
 #' @export
 coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(x, ...) {
-  NextMethod()
+  res <- NextMethod()
+  colnames(res) <- c("estimate", "se", "2.5%", "97.5%")
+  res
 }
 
 

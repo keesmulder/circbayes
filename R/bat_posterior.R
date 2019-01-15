@@ -108,7 +108,6 @@ print.bat_posterior_mod <- function(x, digits = 3, ...) {
 coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
   coef_mat <- x$mcmc_summary[-4, ]
   rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
-
   coef_mat
 }
 

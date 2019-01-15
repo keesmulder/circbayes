@@ -75,7 +75,9 @@ print.pn_posterior_mod <- function(x, digits = 3, ...) {
 
 #' @export
 coef.pn_posterior_mod <- coefficients.pn_posterior_mod <- function(x, ...) {
-  x$coef
+  coef_mat <- x$coef
+  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  coef_mat
 }
 
 

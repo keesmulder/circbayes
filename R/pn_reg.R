@@ -102,16 +102,17 @@ print.pn_reg_mod <- function(x, ...) {
 #' @importFrom bpnreg coef_lin
 #' @export
 coef_lin.pn_reg_mod <- function(object) {
-  # list(lin_I  = object$lin.coef.I,
-  #      lin_II = object$lin.coef.II)
-  NextMethod()
+  coef_mat <- NextMethod()
+  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  coef_mat
 }
 
 #' @importFrom bpnreg coef_circ
 #' @export
 coef_circ.pn_reg_mod <- function(object, ...) {
-  # object$circ.coef
-  NextMethod()
+  coef_mat <- NextMethod()
+  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  coef_mat
 }
 
 
