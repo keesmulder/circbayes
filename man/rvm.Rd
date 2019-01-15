@@ -22,9 +22,8 @@ Numeric vector of \code{n} samples from the von Mises disttribution,
 }
 \description{
 Random generation and probability density function for the von Mises
-distribution. For further von Mises function, see
-\code{\link[circular:vonMises]{pvonmises}} and \code{\link[circular:vonMises]{qvonmises}} in
-package \pkg{circular}.
+distribution. For further von Mises functions, see
+\code{\link[circular]{rvonmises}} in package \pkg{circular}.
 }
 \section{Functions}{
 \itemize{

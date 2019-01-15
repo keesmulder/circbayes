@@ -70,9 +70,8 @@ vm_posterior <- function(th, prior = c(0, 0, 0), niter = 1000, ...) {
 #' Von Mises distribution
 #'
 #' Random generation and probability density function for the von Mises
-#' distribution. For further von Mises function, see
-#' \code{\link[circular:vonMises]{pvonmises}} and \code{\link[circular:vonMises]{qvonmises}} in
-#' package \pkg{circular}.
+#' distribution. For further von Mises functions, see
+#' \code{\link[circular]{rvonmises}} in package \pkg{circular}.
 #'
 #' @param n Number of values to sample.
 #' @param mu Mean direction.

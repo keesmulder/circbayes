@@ -108,8 +108,14 @@ print.bat_posterior_mod <- function(x, digits = 3, ...) {
 
 #' @export
 coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
-  coef_mat <- x$mcmc_summary[-4, ]
-  rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
+  args <- list(...)
+  if (identical(args[['derived']], FALSE)) {
+    coef_mat <- x$mcmc_summary[-(4:6), ]
+    rownames(coef_mat) <- c("mu", "kp", "lam")
+  } else {
+    coef_mat <- x$mcmc_summary[-4, ]
+    rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
+  }
   coef_mat
 }
 

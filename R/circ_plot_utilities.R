@@ -236,7 +236,7 @@ plot_circbayes_univariate <- function(x,
   if (add_fit) {
     # Add pdf of posterior estimates
     p <- p + ggplot2::stat_function(fun = pdf_fun,
-                                    args = list(params = coef(x)[, 1]),
+                                    args = list(params = coef(x, derived = FALSE)[, 1]),
                                     size = 1)
   }
 

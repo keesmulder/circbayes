@@ -33,6 +33,6 @@ The base measure is \eqn{G_0 (\mu, \kappa \mid \gamma) = I_0(R \kappa)^{- n_0}
 \exp(R_0 \kappa \cos(\mu - \mu_0))}.
 }
 \examples{
-dp <- Fit(DirichletProcessVonMises(rvmc(10, 2, 5)), 5)
+dp <- DirichletProcessVonMises(rvm(10, 2, 5))
 dp
 }
