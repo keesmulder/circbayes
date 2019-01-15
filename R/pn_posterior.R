@@ -41,6 +41,8 @@ pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
 #'   in radians.
 #' @export
 #'
+#' @importFrom stats rnorm
+#'
 #' @examples
 #' rprojnorm(40, 3, 2)
 #'
@@ -50,7 +52,8 @@ rprojnorm <- function(n, mu1 = 1, mu2 = 1) {
   circrad(force_neg_pi_pi(th))
 }
 
-
+#' @importFrom stats pnorm
+#' @importFrom stats dnorm
 dprojnorm <- Vectorize(function(x, mu1 = 1, mu2 = 1, log = FALSE) {
   muvec <- c(mu1, mu2)
   u    <- c(cos(x), sin(x))

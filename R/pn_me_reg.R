@@ -18,13 +18,19 @@ pn_me_reg <- function(formula,
                       niter = 1000,
                       thin = 1,
                       burnin = 0,
+                      silent = TRUE,
                       ...) {
 
   if (is.matrix(data)) data <- data.frame(data)
 
   # Run intercept-only Hierarchical Projected Normal regression model
-  res <- bpnreg::bpnme(pred.I = formula, data = data,
-                      its = niter, n.lag = thin, burn = burnin, ...)
+  if (!silent) {
+    res <- bpnreg::bpnme(pred.I = formula, data = data,
+                        its = niter, n.lag = thin, burn = burnin, ...)
+  } else {
+    capture.output(res <- bpnreg::bpnme(pred.I = formula, data = data,
+                        its = niter, n.lag = thin, burn = burnin, ...))
+  }
 
   class(res) <- c("pn_me_reg_mod", class(res))
 
@@ -68,16 +74,17 @@ print.pn_me_reg_mod <- function(x, ...) {
 #' @importFrom bpnreg coef_lin
 #' @export
 coef_lin.pn_me_reg_mod <- function(object) {
-  # list(lin_I  = object$lin.coef.I,
-  #      lin_II = object$lin.coef.II)
-  NextMethod()
+  coef_mat <- NextMethod()
+  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  coef_mat
 }
 
 #' @importFrom bpnreg coef_circ
 #' @export
 coef_circ.pn_me_reg_mod <- function(object, ...) {
-  # object$circ.coef
-  NextMethod()
+  coef_mat <- NextMethod()
+  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  coef_mat
 }
 
 

@@ -111,7 +111,8 @@ rbesselexp2 <- function(n, mu, mu_n, R_n, n_n) {
 }
 
 
-# @importFrom dirichletprocess PosteriorParameters
+#' @importFrom dirichletprocess PosteriorParameters
+#' @importFrom stats runif
 PosteriorParameters.vonmises <- function(mdobj, x) {
   priorParameters <- mdobj$priorParameters
 
@@ -264,6 +265,7 @@ PosteriorDraw.vonmises <- function(mdobj, x, n = 1) {
 
 
 # Integral over mu and kp of exp(R * kp * cos(mu)) / (besselI(kp, 0)^n)
+#' @importFrom stats integrate
 vmbesselexp_nc <- function(R, n) {
 
   # mu is already integrated out analytically here. The function is

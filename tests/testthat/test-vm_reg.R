@@ -14,8 +14,8 @@ mod2 <- vm_reg(th ~ .,
                data = th_df,
                burnin = 0,
                niter = 20,
-               conj_prior = c(2, 10, 15),
-               beta_prior = c(0, .3))
+               prior_b0kp = c(2, 10, 15),
+               prior_btdt = c(0, .3))
 
 
 test_that("Posterior sampling", {

@@ -140,6 +140,7 @@ print.vm_posterior_mod <- function(x, digits = 3, ...) {
 }
 
 
+#' @importFrom stats coef
 #' @export
 #' @describeIn vm_posterior Posterior summary of parameters.
 coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(x, ...) {

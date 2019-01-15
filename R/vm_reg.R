@@ -1,9 +1,14 @@
 #' Bayesian inference for von Mises regression.
 #'
-#' @param th Circular observations, either \code{numeric} in radians, or
-#'   \code{circular}.
-#' @param prior Numeric of length 3. Prior parameters for conjugate prior of the
-#'   von Mises distribution. The order is \eqn{\mu_0, R_0, c}.
+#' @param formula an object of class "\code{\link{formula}}" (or one that can be
+#'   coerced to that class): a symbolic description of the model to be fitted.
+#' @param data A data frame or matrix containing the circular observations and
+#'   predictors.
+#' @param prior_b0kp Numeric vector of length 3. The prior parameters of the von
+#'   Mises conjugate prior for the intercept and concentration parameter.
+#' @param prior_btdt Numeric vector of length 2. The prior parameters for the
+#'   normal prior on the regression coefficients.
+#' @param r Parameter of the link function, \eqn{g(x) = r * arctan(x)}.
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
@@ -15,8 +20,8 @@
 #'
 vm_reg <- function(formula,
                    data,
-                   conj_prior = c(0, 0, 0),
-                   beta_prior = c(0, 1),
+                   prior_b0kp = c(0, 0, 0),
+                   prior_btdt = c(0, 1),
                    niter = 1000,
                    r = 2,
                    ...) {
@@ -27,8 +32,8 @@ vm_reg <- function(formula,
   # Run von Mises regression model
   res <- circglmbayes::circGLM(formula = formula,
                                data = data,
-                               conj_prior    = conj_prior,
-                               bt_prior_musd = beta_prior,
+                               conj_prior    = prior_b0kp,
+                               bt_prior_musd = prior_btdt,
                                Q = niter, r = r, ...)
 
 

@@ -4,7 +4,8 @@
 \alias{pn_me_reg}
 \title{Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.}
 \usage{
-pn_me_reg(formula, data, niter = 1000, thin = 1, burnin = 0, ...)
+pn_me_reg(formula, data, niter = 1000, thin = 1, burnin = 0,
+  silent = TRUE, ...)
 }
 \arguments{
 \item{niter}{Number of iterations to perform MCMC for.}

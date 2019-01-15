@@ -13,6 +13,7 @@ param_version_of_fun <- function(fun) {
 
 
 # Return sample of pdfs on x grid
+#' @importFrom stats quantile
 geom_mcmc_fun_sample <- function(fun, param_mat, n_funs = 100,
                                  alpha = .2,
                                  col = grDevices::rgb(0.1, 0.1, 0.1, alpha),

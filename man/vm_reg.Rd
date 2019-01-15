@@ -4,19 +4,27 @@
 \alias{vm_reg}
 \title{Bayesian inference for von Mises regression.}
 \usage{
-vm_reg(formula, data, conj_prior = c(0, 0, 0), beta_prior = c(0, 1),
+vm_reg(formula, data, prior_b0kp = c(0, 0, 0), prior_btdt = c(0, 1),
   niter = 1000, r = 2, ...)
 }
 \arguments{
+\item{formula}{an object of class "\code{\link{formula}}" (or one that can be
+coerced to that class): a symbolic description of the model to be fitted.}
+
+\item{data}{A data frame or matrix containing the circular observations and
+predictors.}
+
+\item{prior_b0kp}{Numeric vector of length 3. The prior parameters of the von
+Mises conjugate prior for the intercept and concentration parameter.}
+
+\item{prior_btdt}{Numeric vector of length 2. The prior parameters for the
+normal prior on the regression coefficients.}
+
 \item{niter}{Number of iterations to perform MCMC for.}
 
+\item{r}{Parameter of the link function, \eqn{g(x) = r * arctan(x)}.}
+
 \item{...}{Further arguments passed to \code{circglmbayes::circGLM}.}
-
-\item{th}{Circular observations, either \code{numeric} in radians, or
-\code{circular}.}
-
-\item{prior}{Numeric of length 3. Prior parameters for conjugate prior of the
-von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
 \value{
 Object of type \code{vm_reg_mod}.
