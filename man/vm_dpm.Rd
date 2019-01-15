@@ -15,6 +15,9 @@ vm_dpm(th, g0Priors = c(0, 0, 1), alphaPriors = c(2, 4),
 
 \item{...}{Further arguments passed to \code{circglmbayes::fitbatmix}.}
 }
+\value{
+Object of type \code{vm_dpm_mod}.
+}
 \description{
 Bayesian inference for Dirichlet Process Mixture of Von Mises distributions.
 }

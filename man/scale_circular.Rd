@@ -2,11 +2,17 @@
 % Please edit documentation in R/circ_plot_utilities.R
 \name{scale_circular}
 \alias{scale_circular}
+\alias{scale_x_circular}
+\alias{scale_y_circular}
 \title{Circular ggplot scales}
 \usage{
 scale_circular(units = "degrees", nticks = 4, digits = 0,
   limits = c(0, 2 * pi), positive_labels = TRUE,
   scale_function = ggplot2::scale_x_continuous, ...)
+
+scale_x_circular(...)
+
+scale_y_circular(...)
 }
 \arguments{
 \item{units}{The units to display on the axis. See `Details` for the options.}
@@ -53,6 +59,13 @@ Two additional labels are \code{"texpi"} and \code{"texnegpi"}, which print
 nice labels for TeX to interpret starting at 0 and \code{-pi} respectively.
 This is useful if TikZ is used.
 }
+\section{Functions}{
+\itemize{
+\item \code{scale_x_circular}: If circular data is on the x-axis.
+
+\item \code{scale_y_circular}: If circular data is on the y-axis.
+}}
+
 \examples{
 p <- plot_batmixfit(params = cbind(mu = c(-pi/2, 0, pi/2, pi), kp = 4,
                               lam = c(-.9, .2, .8, 0), alph = .25))

@@ -1,3 +1,35 @@
+#' Posterior of the Projected Normal distribution.
+#'
+#' @param th Circular observations, either \code{numeric} in radians, or
+#'   \code{circular}.
+#' @param niter Number of iterations to perform MCMC for.
+#' @param ... Further arguments passed to \code{bpnreg::bpnr}.
+#'
+#' @return Object of type \code{pn_posterior_mod}.
+#' @export
+#'
+#' @examples
+#' pn_posterior(rprojnorm(30, 2, 5))
+#'
+pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
+
+  df <- data.frame(th = as.circrad(th))
+
+  # Run intercept-only Projected Normal regression model
+  res <- bpnreg::bpnr(pred.I = th ~ 1, data = df, pred.II = th ~ 1,
+                      its = niter, n.lag = thin, burn = burnin, ...)
+
+  coef_pnpost <- bpnreg::coef_lin(res)
+  rownames(coef_pnpost) <- c("mu1", "mu2")
+  res$coef <- coef_pnpost
+  res$data <- th
+  res$estimates <- coef_pnpost[, 2L]
+  res$log_posterior <- log_posterior_pn
+
+  class(res) <- c("pn_posterior_mod", class(res))
+
+  res
+}
 
 #' Random generation for the Projected Normal distribution.
 #'
@@ -35,11 +67,13 @@ dprojnorm <- Vectorize(function(x, mu1 = 1, mu2 = 1, log = FALSE) {
 })
 
 
+#' @export
 print.pn_posterior_mod <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))
 }
 
 
+#' @export
 coef.pn_posterior_mod <- coefficients.pn_posterior_mod <- function(x, ...) {
   x$coef
 }
@@ -50,7 +84,7 @@ posterior_samples.pn_posterior_mod <- function(x) {
         mu2 = as.numeric(x$B2))
 }
 
-#
+#' @export
 plot.pn_posterior_mod <- function(x, ...) {
   plot_circbayes_univariate(x, pdf_fun = dprojnorm, ...)
 }
@@ -62,6 +96,7 @@ log_posterior_pn <- function(muvec, data) {
 }
 
 
+#' @export
 marg_lik.pn_posterior_mod <- function(x, ...) {
 
   sam <- posterior_samples(x)
@@ -86,6 +121,7 @@ marg_lik.pn_posterior_mod <- function(x, ...) {
 
 
 
+#' @export
 inf_crit.pn_posterior_mod <- function(x, ...) {
   ics <- x$model.fit
   if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
@@ -100,35 +136,3 @@ inf_crit.pn_posterior_mod <- function(x, ...) {
 
 
 
-#' Posterior of the Projected Normal distribution.
-#'
-#' @param th Circular observations, either \code{numeric} in radians, or
-#'   \code{circular}.
-#' @param niter Number of iterations to perform MCMC for.
-#' @param ... Further arguments passed to \code{bpnreg::bpnr}.
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' pn_posterior(rprojnorm(30, 2, 5))
-#'
-pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
-
-  df <- data.frame(th = as.circrad(th))
-
-  # Run intercept-only Projected Normal regression model
-  res <- bpnreg::bpnr(pred.I = th ~ 1, data = df, pred.II = th ~ 1,
-                      its = niter, n.lag = thin, burn = burnin, ...)
-
-  coef_pnpost <- bpnreg::coef_lin(res)
-  rownames(coef_pnpost) <- c("mu1", "mu2")
-  res$coef <- coef_pnpost
-  res$data <- th
-  res$estimates <- coef_pnpost[, 2L]
-  res$log_posterior <- log_posterior_pn
-
-  class(res) <- c("pn_posterior_mod", class(res))
-
-  res
-}

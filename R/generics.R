@@ -22,7 +22,7 @@ posterior_samples <- function(object, ...)  {
 #' @param x Object.
 #' @param ... Further arguments.
 #'
-#' @return A function
+#' @return A function.
 #' @export
 #'
 predict_function <- function(x, ...) {
@@ -48,19 +48,19 @@ inf_crit <- function(x, ...) {
 
 #' Compute the Marginal likelihood of circular Bayesian models.
 #'
-#' For most models in \code{circbayes}, this uses \code{\link{bridgesampling}}.
+#' For most models in \code{circbayes}, this uses \code{\link[bridgesampling]{bridge_sampler}}.
 #'
 #' @param x Fit model object.
 #' @param ... Further arguments.
 #'
-#' @return
+#' @return Numeric; the log marginal likelihood.
 #' @export
 #'
 #' @examples
 #' th <- rvm(40, 5, 8)
-#' vm_mod <- vm_posterior(th)
-#' pn_mod <- pn_posterior(th)
-#' bt_mod <- bt_posterior(th)
+#' vm_mod  <- vm_posterior(th)
+#' pn_mod  <- pn_posterior(th)
+#' bat_mod <- bat_posterior(th)
 #' mlvm <- marg_lik(vm_mod)
 #' mlpn <- marg_lik(pn_mod)
 #' mlbt <- marg_lik(bat_mod)

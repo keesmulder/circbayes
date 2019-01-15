@@ -2,9 +2,24 @@
 % Please edit documentation in R/vm_posterior.R
 \name{vm_posterior}
 \alias{vm_posterior}
+\alias{print.vm_posterior_mod}
+\alias{coef.vm_posterior_mod}
+\alias{posterior_samples.vm_posterior_mod}
+\alias{marg_lik.vm_posterior_mod}
+\alias{plot.vm_posterior_mod}
 \title{Posterior of the von Mises distribution.}
 \usage{
 vm_posterior(th, prior = c(0, 0, 0), niter = 1000, ...)
+
+\method{print}{vm_posterior_mod}(x, digits = 3, ...)
+
+\method{coef}{vm_posterior_mod}(x, ...)
+
+\method{posterior_samples}{vm_posterior_mod}(x)
+
+\method{marg_lik}{vm_posterior_mod}(x, method = "integrate", ...)
+
+\method{plot}{vm_posterior_mod}(x, ...)
 }
 \arguments{
 \item{th}{Circular observations, either \code{numeric} in radians, or
@@ -17,9 +32,25 @@ von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 
 \item{...}{Further arguments passed to \code{circglmbayes::circGLM}.}
 }
+\value{
+Object of type \code{vm_posterior_mod}.
+}
 \description{
 Posterior of the von Mises distribution.
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{print}: Print function.
+
+\item \code{coef}: Posterior summary of parameters.
+
+\item \code{posterior_samples}: Posterior samples (only model parameters, not derived).
+
+\item \code{marg_lik}: Compute marginal likelihood.
+
+\item \code{plot}: Plot function.
+}}
+
 \examples{
 vm_posterior(rvm(30, 2, 5))
 

@@ -57,7 +57,13 @@ bht_compare <- function(...) {
   models <- list(...)
 
   nms <- names(models)
-
+  if (is.null(nms)) {
+    nms <- paste("Model", seq_along(models))
+  } else if (any(nms == "")) {
+    which_empty <- nms == ""
+    base_names <- paste("Model", seq_along(models))
+    nms[which_empty] <- base_names[which_empty]
+  }
 
 
   if (any(vapply(models, length, 0) > 1)) {

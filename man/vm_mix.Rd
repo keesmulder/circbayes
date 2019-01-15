@@ -17,6 +17,9 @@ vm_mix(th, n_comp = 3, mu_logprior_fun = function(mu) 0,
 
 \item{...}{Further arguments passed to \code{circglmbayes::fitbatmix}.}
 }
+\value{
+Object of type \code{vm_mix_mod}.
+}
 \description{
 Posterior of mixture of Von Mises distributions.
 }

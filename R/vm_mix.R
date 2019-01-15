@@ -1,97 +1,3 @@
-#' Random generation for the Inverse Batschelet mixture distribution.
-#'
-#' @param n Number of values to sample.
-#' @param mus Mean directions.
-#' @param kps Concentration parameters.
-#' @param lams Lambdas, peakedness parameter, between -1 and 1. Positive values
-#'   give a peaked density, while negative values give flat-topped densities. .
-#' @param alphs Mixture weights.
-#'
-#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
-#'   distribution, in radians.
-#' @export
-#'
-#' @examples
-#' hist(rvmmix(1000), breaks = 100)
-#'
-rvmmix <- function(n, mus = -1:1, kps = c(50, 25, 10), alphs = c(.2, .2, .6)) {
-  circrad(flexcircmix::rinvbatmix(n, mus, kps,
-                                  lams = rep(0, length(mus)), alphs))
-}
-
-
-print.vm_mix_mod <- function(x, digits = 3, ...) {
-  print(round(coef(x), digits))
-}
-
-
-coef.vm_mix_mod <- coefficients.vm_mix_mod <- function(x, ...) {
-  coef_mat <- x$mcmc_summary
-  coef_mat[!grepl("lam_", rownames(coef_mat)), ]
-}
-
-
-posterior_samples.vm_mix_mod <- function(x) {
-  mat <- x$mcmc_sample[, 1:(x$n_components * 4)]
-  mat[, !(x$which_lam[1:ncol(mat)])]
-}
-
-
-plot.vm_mix_mod <- function(x, ...) {
-  mu_names    <- x$mu_names
-  kp_names    <- x$kp_names
-  alph_names  <- x$alph_names
-
-  pdf_fun <- function(x, params) {
-    flexcircmix::dbatmix(x, dbat_fun = dpowbat,
-                         mus   = params[mu_names  ],
-                         kps   = params[kp_names  ],
-                         lams  = rep(0, length(mu_names)),
-                         alphs = params[alph_names])
-  }
-
-  plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
-}
-
-
-
-
-#' @importFrom bridgesampling bridge_sampler
-bridge_sampler.vm_mix_mod <- function(samples, ...) {
-
-
-  n_comp <- samples$n_components
-
-  sam <- posterior_samples(samples)
-
-  lb <- rep(c(-2*pi, 0,  0), each = n_comp)
-  ub <- rep(c(2*pi, Inf, 1), each = n_comp)
-
-  names(lb) <- colnames(sam)
-  names(ub) <- colnames(sam)
-
-  bridgesampling::bridge_sampler(data = samples$x,
-                                 samples = as.matrix(sam),
-                                 param_types = rep(c("circular", "real","simplex"), each = n_comp),
-                                 log_posterior = samples$log_posterior,
-                                 lb = lb, ub = ub,
-                                 silent = TRUE, ...)
-}
-
-marg_lik.vm_mix_mod <- function(x, ...) {
-
-  bsobj <- bridgesampling::bridge_sampler(samples = x,
-                                          ...)
-
-  bridgesampling::logml(bsobj)
-}
-
-
-inf_crit.vm_mix_mod <- function(x, ...) {
-  x$ic_mat
-}
-
-
 #' Posterior of mixture of Von Mises distributions.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -99,7 +5,7 @@ inf_crit.vm_mix_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
 #'
-#' @return
+#' @return Object of type \code{vm_mix_mod}.
 #' @export
 #'
 #' @examples
@@ -196,3 +102,105 @@ vm_mix <- function(th,
 
   vmmix_res
 }
+
+
+#' Random generation for the Inverse Batschelet mixture distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mus Mean directions.
+#' @param kps Concentration parameters.
+#' @param lams Lambdas, peakedness parameter, between -1 and 1. Positive values
+#'   give a peaked density, while negative values give flat-topped densities. .
+#' @param alphs Mixture weights.
+#'
+#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
+#'   distribution, in radians.
+#' @export
+#'
+#' @examples
+#' hist(rvmmix(1000), breaks = 100)
+#'
+rvmmix <- function(n, mus = -1:1, kps = c(50, 25, 10), alphs = c(.2, .2, .6)) {
+  circrad(flexcircmix::rinvbatmix(n, mus, kps,
+                                  lams = rep(0, length(mus)), alphs))
+}
+
+
+print.vm_mix_mod <- function(x, digits = 3, ...) {
+  print(round(coef(x), digits))
+}
+
+
+#' @export
+coef.vm_mix_mod <- coefficients.vm_mix_mod <- function(x, ...) {
+  coef_mat <- x$mcmc_summary
+  coef_mat[!grepl("lam_", rownames(coef_mat)), ]
+}
+
+
+#' @export
+posterior_samples.vm_mix_mod <- function(x) {
+  mat <- x$mcmc_sample[, 1:(x$n_components * 4)]
+  mat[, !(x$which_lam[1:ncol(mat)])]
+}
+
+
+#' @export
+plot.vm_mix_mod <- function(x, ...) {
+  mu_names    <- x$mu_names
+  kp_names    <- x$kp_names
+  alph_names  <- x$alph_names
+
+  pdf_fun <- function(x, params) {
+    flexcircmix::dbatmix(x, dbat_fun = dpowbat,
+                         mus   = params[mu_names  ],
+                         kps   = params[kp_names  ],
+                         lams  = rep(0, length(mu_names)),
+                         alphs = params[alph_names])
+  }
+
+  plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
+}
+
+
+
+
+#' @importFrom bridgesampling bridge_sampler
+bridge_sampler.vm_mix_mod <- function(samples, ...) {
+
+
+  n_comp <- samples$n_components
+
+  sam <- posterior_samples(samples)
+
+  lb <- rep(c(-2*pi, 0,  0), each = n_comp)
+  ub <- rep(c(2*pi, Inf, 1), each = n_comp)
+
+  names(lb) <- colnames(sam)
+  names(ub) <- colnames(sam)
+
+  bridgesampling::bridge_sampler(data = samples$x,
+                                 samples = as.matrix(sam),
+                                 param_types = rep(c("circular", "real","simplex"), each = n_comp),
+                                 log_posterior = samples$log_posterior,
+                                 lb = lb, ub = ub,
+                                 silent = TRUE, ...)
+}
+
+
+#' @export
+marg_lik.vm_mix_mod <- function(x, ...) {
+
+  bsobj <- bridgesampling::bridge_sampler(samples = x,
+                                          ...)
+
+  bridgesampling::logml(bsobj)
+}
+
+
+#' @export
+inf_crit.vm_mix_mod <- function(x, ...) {
+  x$ic_mat
+}
+
+

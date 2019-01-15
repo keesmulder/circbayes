@@ -4,11 +4,23 @@
 \alias{bht_compare}
 \title{Bayesian hypothesis tests from marginal likelihoods.}
 \usage{
-bht_compare(..., add_uniform = FALSE)
+bht_compare(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{(Named) list of models.}
+}
+\value{
+Object of type \code{'bht_comparison'}.
 }
 \description{
 Bayesian hypothesis tests from marginal likelihoods.
+}
+\examples{
+# Test circular uniformity versus von mises.
+th     <- rvm(30, 0, 1)
+vm_mod <- vm_posterior(th)
+
+bht_compare(uniform  = marg_lik_circ_unif(th),
+            vonmises = marg_lik(vm_mod))
+
 }

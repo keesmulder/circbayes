@@ -2,9 +2,12 @@
 % Please edit documentation in R/vm_posterior.R
 \name{rvm}
 \alias{rvm}
-\title{Random generation for the von Mises distribution.}
+\alias{dvm}
+\title{Von Mises distribution}
 \usage{
 rvm(n, mu = 0, kp = 1)
+
+dvm(x, mu = 0, kp = 1, log = FALSE)
 }
 \arguments{
 \item{n}{Number of values to sample.}
@@ -18,8 +21,16 @@ Numeric vector of \code{n} samples from the von Mises disttribution,
   in radians.
 }
 \description{
-Random generation for the von Mises distribution.
+Random generation and probability density function for the von Mises
+distribution. For further von Mises function, see
+\code{\link[circular:vonMises]{pvonmises}} and \code{\link[circular:vonMises]{qvonmises}} in
+package \pkg{circular}.
 }
+\section{Functions}{
+\itemize{
+\item \code{dvm}: Probability density function.
+}}
+
 \examples{
 rvm(40, 3, 2)
 

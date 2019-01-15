@@ -2,9 +2,15 @@
 % Please edit documentation in R/bat_posterior.R
 \name{rinvbat}
 \alias{rinvbat}
-\title{Random generation for the Inverse Batschelet distribution.}
+\alias{dinvbat}
+\alias{dpowbat}
+\title{Inverse Batschelet distribution}
 \usage{
 rinvbat(n, mu = 0, kp = 1, lam = 0)
+
+dinvbat(x, mu = 0, kp = 1, lam = 0, log = FALSE)
+
+dpowbat(x, mu = 0, kp = 1, lam = 0, log = FALSE)
 }
 \arguments{
 \item{n}{Number of values to sample.}
@@ -21,8 +27,15 @@ Numeric vector of \code{n} samples from the Inverse Batschelet
   distribution, in radians.
 }
 \description{
-Random generation for the Inverse Batschelet distribution.
+Random generation and probability for the Inverse Batschelet Distribution.
 }
+\section{Functions}{
+\itemize{
+\item \code{dinvbat}: Density function for Inverse Batschelet.
+
+\item \code{dpowbat}: Density function for Power Batschelet.
+}}
+
 \examples{
 hist(rinvbat(1000, .3, 2, .8), breaks = 100)
 

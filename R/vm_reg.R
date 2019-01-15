@@ -1,171 +1,3 @@
-
-#' Random generation for the von Mises distribution.
-#'
-#' @param n Number of values to sample.
-#' @param mu Mean direction.
-#' @param kp Concentration parameter.
-#'
-#' @return Numeric vector of \code{n} samples from the von Mises disttribution,
-#'   in radians.
-#' @export
-#'
-#' @examples
-#' rvm(40, 3, 2)
-#'
-rvm_reg <- function(n, beta0 = 0, kp = 1, beta = c(1, 2), delta = c(1, -1)) {
-  dmat <- circglmbayes::generateCircGLMData(n = n, residkappa = kp,
-                                            nconpred  = length(beta),
-                                            ncatpred  = length(delta),
-                                            truebeta0 = beta0,
-                                            truebeta  = beta,
-                                            truedelta = delta)
-  dmat[, 'th'] <- as.circrad(dmat[, 'th'])
-
-  dmat
-}
-
-
-
-print.vm_reg_mod <- function(x, ...) {
-  NextMethod()
-}
-
-
-coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(x, ...) {
-  NextMethod()
-}
-
-
-predict.vm_reg_mod <- function(object, newdata, ...) {
-  NextMethod()
-}
-
-# Prediction function for a given set of named parameters.
-# beta and delta must be named to find them in newdata.
-predict_function_pars <- function(beta_0 = 0, beta = NULL, delta = NULL,
-                                  linkfun = function(x) 2 * atan(x)) {
-  # beta  <- matrix(beta)
-  # delta <- matrix(delta)
-
-  function(newdata) {
-    if (length(delta) == 0) {
-      dpart <- 0
-    } else {
-      d <- newdata[, names(delta), drop = FALSE]
-      dpart <- d %*% delta
-    }
-
-    if (length(beta) == 0) {
-      xpart <- 0
-    } else {
-      x <- newdata[, names(beta), drop = FALSE]
-      xpart <- linkfun(x %*% beta)
-    }
-    beta_0 + xpart + dpart
-  }
-}
-
-
-
-# Helper functions giving regression lines when plotting. These are simpler,
-# because regression lines assume all other x's will be 0.
-single_pred_fun_beta <- function(x, params, linkfun = function(x) 2 * atan(x)) {
-  params[1] + linkfun(params[2] * x)
-}
-single_pred_fun_delta <- function(x, params) {
-  params[1] + params[2] * x
-}
-
-
-
-
-predict_function.vm_reg_mod <- function(object,
-                                        linkfun = function(x) 2 * atan(x)) {
-  function(newdata) {
-    if (length(object$dt_meandir) == 0) {
-      dpart <- 0
-    } else {
-      d <- newdata[, colnames(object$dt_meandir), drop = FALSE]
-      dpart <- d %*% t(object$dt_meandir)
-    }
-
-    if (length(object$bt_mean) == 0) {
-      xpart <- 0
-    } else {
-      x <- newdata[, colnames(object$bt_mean), drop = FALSE]
-      xpart <- linkfun(x %*% t(object$bt_mean))
-    }
-    unname(object$b0_meandir + xpart + dpart)
-  }
-}
-
-
-posterior_samples.vm_reg_mod <- function(x) {
-  n_param <- 2 + length(x$bt_mean) + length(x$dt_meandir)
-  post_sam <- x$all_chains[, 1:n_param]
-  colnames(post_sam) <- x$parnames
-  post_sam
-}
-
-
-plot.vm_reg_mod <- function(x, pred_name, ...) {
-
-  # If no predictor name is chosen, pick the first.
-  if (missing(pred_name)) pred_name <- x$parnames[3]
-
-  # Check if the chosen predictor is delta or beta.
-  if (pred_name %in% colnames(x$bt_mean)) {
-    pred_fun <- single_pred_fun_beta
-    par_fit  <- x$bt_mean[, pred_name]
-  } else if (pred_name %in% colnames(x$dt_meandir)) {
-    pred_fun <- single_pred_fun_delta
-    par_fit  <- x$dt_meandir[, pred_name]
-  } else {
-    stop(paste("pred_name", pred_name, "not found."))
-  }
-
-  plot_circbayes_regression(x,
-                            pred_name = pred_name,
-                            fit_params = c(x$b0_meandir, par_fit),
-                            pred_fun = pred_fun, ...)
-}
-
-
-
-marg_lik.vm_reg_mod <- function(x, ...) {
-
-  sam <- posterior_samples(x)
-
-  n_par <- ncol(sam)
-
-  lb <- c(-2*pi, 0,  rep(-Inf, n_par - 2))
-  ub <- c(2*pi, Inf, rep( Inf, n_par - 2))
-
-  nms <- colnames(sam)
-  names(lb) <- nms
-  names(ub) <- nms
-
-  delta_idx <-  nms %in% x$delta_names
-
-  partypes <- c("circular", "real", rep("real", n_par - 2))
-  partypes[delta_idx] <- "circular"
-  lb[delta_idx] <- -2*pi
-  ub[delta_idx] <-  2*pi
-
-  bsobj <- bridgesampling::bridge_sampler(data = x$data,
-                                          samples = as.matrix(sam),
-                                          param_types = partypes,
-                                          log_posterior = x$log_posterior,
-                                          lb = lb, ub = ub,
-                                          silent = TRUE,
-                                          ...)
-
-  bridgesampling::logml(bsobj)
-}
-
-
-
-
 #' Bayesian inference for von Mises regression.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -175,7 +7,7 @@ marg_lik.vm_reg_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
-#' @return
+#' @return Object of type \code{vm_reg_mod}.
 #' @export
 #'
 #' @examples
@@ -238,3 +70,179 @@ vm_reg <- function(formula,
 
   res
 }
+
+#' Random generation for the von Mises distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mu Mean direction.
+#' @param kp Concentration parameter.
+#'
+#' @return Numeric vector of \code{n} samples from the von Mises disttribution,
+#'   in radians.
+#' @export
+#'
+#' @examples
+#' rvm(40, 3, 2)
+#'
+rvm_reg <- function(n, beta0 = 0, kp = 1, beta = c(1, 2), delta = c(1, -1)) {
+  dmat <- circglmbayes::generateCircGLMData(n = n, residkappa = kp,
+                                            nconpred  = length(beta),
+                                            ncatpred  = length(delta),
+                                            truebeta0 = beta0,
+                                            truebeta  = beta,
+                                            truedelta = delta)
+  dmat[, 'th'] <- as.circrad(dmat[, 'th'])
+
+  dmat
+}
+
+
+
+# Prediction function for a given set of named parameters.
+# beta and delta must be named to find them in newdata.
+predict_function_pars <- function(beta_0 = 0, beta = NULL, delta = NULL,
+                                  linkfun = function(x) 2 * atan(x)) {
+  # beta  <- matrix(beta)
+  # delta <- matrix(delta)
+
+  function(newdata) {
+    if (length(delta) == 0) {
+      dpart <- 0
+    } else {
+      d <- newdata[, names(delta), drop = FALSE]
+      dpart <- d %*% delta
+    }
+
+    if (length(beta) == 0) {
+      xpart <- 0
+    } else {
+      x <- newdata[, names(beta), drop = FALSE]
+      xpart <- linkfun(x %*% beta)
+    }
+    beta_0 + xpart + dpart
+  }
+}
+
+
+
+# Helper functions giving regression lines when plotting. These are simpler,
+# because regression lines assume all other x's will be 0.
+single_pred_fun_beta <- function(x, params, linkfun = function(x) 2 * atan(x)) {
+  params[1] + linkfun(params[2] * x)
+}
+single_pred_fun_delta <- function(x, params) {
+  params[1] + params[2] * x
+}
+
+
+#' @export
+print.vm_reg_mod <- function(x, ...) {
+  NextMethod()
+}
+
+
+#' @export
+coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(x, ...) {
+  NextMethod()
+}
+
+
+#' @export
+predict.vm_reg_mod <- function(object, newdata, ...) {
+  NextMethod()
+}
+
+
+
+
+#' @export
+predict_function.vm_reg_mod <- function(object,
+                                        linkfun = function(x) 2 * atan(x)) {
+  function(newdata) {
+    if (length(object$dt_meandir) == 0) {
+      dpart <- 0
+    } else {
+      d <- newdata[, colnames(object$dt_meandir), drop = FALSE]
+      dpart <- d %*% t(object$dt_meandir)
+    }
+
+    if (length(object$bt_mean) == 0) {
+      xpart <- 0
+    } else {
+      x <- newdata[, colnames(object$bt_mean), drop = FALSE]
+      xpart <- linkfun(x %*% t(object$bt_mean))
+    }
+    unname(object$b0_meandir + xpart + dpart)
+  }
+}
+
+
+#' @export
+posterior_samples.vm_reg_mod <- function(x) {
+  n_param <- 2 + length(x$bt_mean) + length(x$dt_meandir)
+  post_sam <- x$all_chains[, 1:n_param]
+  colnames(post_sam) <- x$parnames
+  post_sam
+}
+
+
+#' @export
+plot.vm_reg_mod <- function(x, pred_name, ...) {
+
+  # If no predictor name is chosen, pick the first.
+  if (missing(pred_name)) pred_name <- x$parnames[3]
+
+  # Check if the chosen predictor is delta or beta.
+  if (pred_name %in% colnames(x$bt_mean)) {
+    pred_fun <- single_pred_fun_beta
+    par_fit  <- x$bt_mean[, pred_name]
+  } else if (pred_name %in% colnames(x$dt_meandir)) {
+    pred_fun <- single_pred_fun_delta
+    par_fit  <- x$dt_meandir[, pred_name]
+  } else {
+    stop(paste("pred_name", pred_name, "not found."))
+  }
+
+  plot_circbayes_regression(x,
+                            pred_name = pred_name,
+                            fit_params = c(x$b0_meandir, par_fit),
+                            pred_fun = pred_fun, ...)
+}
+
+
+
+#' @export
+marg_lik.vm_reg_mod <- function(x, ...) {
+
+  sam <- posterior_samples(x)
+
+  n_par <- ncol(sam)
+
+  lb <- c(-2*pi, 0,  rep(-Inf, n_par - 2))
+  ub <- c(2*pi, Inf, rep( Inf, n_par - 2))
+
+  nms <- colnames(sam)
+  names(lb) <- nms
+  names(ub) <- nms
+
+  delta_idx <-  nms %in% x$delta_names
+
+  partypes <- c("circular", "real", rep("real", n_par - 2))
+  partypes[delta_idx] <- "circular"
+  lb[delta_idx] <- -2*pi
+  ub[delta_idx] <-  2*pi
+
+  bsobj <- bridgesampling::bridge_sampler(data = x$data,
+                                          samples = as.matrix(sam),
+                                          param_types = partypes,
+                                          log_posterior = x$log_posterior,
+                                          lb = lb, ub = ub,
+                                          silent = TRUE,
+                                          ...)
+
+  bridgesampling::logml(bsobj)
+}
+
+
+
+

@@ -17,6 +17,9 @@ bat_mix(th, bat_type = "power", n_comp = 3,
 
 \item{...}{Further arguments passed to \code{circglmbayes::fitbatmix}.}
 }
+\value{
+Object of type \code{bat_mix_mod}.
+}
 \description{
 Posterior of mixture of Power or Inverse Batschelet distributions.
 }

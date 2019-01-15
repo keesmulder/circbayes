@@ -14,6 +14,9 @@ pn_posterior(th, niter = 1000, thin = 1, burnin = 0, ...)
 
 \item{...}{Further arguments passed to \code{bpnreg::bpnr}.}
 }
+\value{
+Object of type \code{pn_posterior_mod}.
+}
 \description{
 Posterior of the Projected Normal distribution.
 }

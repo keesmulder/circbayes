@@ -12,7 +12,7 @@ predict_function(x, ...)
 \item{...}{Further arguments.}
 }
 \value{
-A function
+A function.
 }
 \description{
 Obtain the prediction function of a VM regression object.

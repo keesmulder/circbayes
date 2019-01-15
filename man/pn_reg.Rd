@@ -18,7 +18,7 @@ pn_reg(formula, data, niter = 1000, thin = 1, burnin = 0, ...)
 von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
 \value{
-A \code{pn_reg_mod} object.
+Object of type \code{pn_reg_mod}.
 }
 \description{
 Bayesian inference for Projected Normal regression.

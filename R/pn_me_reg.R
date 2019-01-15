@@ -1,60 +1,3 @@
-
-
-
-
-print.pn_me_reg_mod <- function(x, ...) {
-  NextMethod()
-}
-
-
-#' @importFrom bpnreg coef_lin
-coef_lin.pn_me_reg_mod <- function(object) {
-  # list(lin_I  = object$lin.coef.I,
-  #      lin_II = object$lin.coef.II)
-  NextMethod()
-}
-
-#' @importFrom bpnreg coef_circ
-coef_circ.pn_me_reg_mod <- function(object, ...) {
-  # object$circ.coef
-  NextMethod()
-}
-
-
-coef.pn_me_reg_mod <- coefficients.pn_me_reg_mod <- function(object, ...) {
-  list(linear = coef_lin(object), circular = coef_circ(object))
-}
-
-
-
-predict.pn_me_reg_mod <- function(object, newdata, ...) {
-  NextMethod()
-}
-
-
-
-posterior_samples.pn_me_reg_mod <- function(x) {
-  B1 <- x$B.I
-  B2 <- x$B.II
-  Beta1 <- x$Beta.I
-  Beta2 <- x$Beta.II
-
-  list(B1, B2, Beta1, Beta2)
-}
-
-
-
-inf_crit.pn_me_reg_mod <- function(x, ...) {
-  ics <- x$model.fit
-  if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
-    ic_df <- t(data.frame(ics))
-    colnames(ic_df) <- "value"
-    return(ic_df)
-  } else {
-    return(ics)
-  }
-}
-
 #' Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -64,7 +7,7 @@ inf_crit.pn_me_reg_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
-#' @return A \code{pn_me_reg_mod} object.
+#' @return Object of type \code{pn_me_reg_mod}.
 #' @export
 #'
 #' @examples
@@ -93,7 +36,8 @@ pn_me_reg <- function(formula,
   res$estimates_B1 <- res$lin.coef.I[, 2]
   res$estimates_B2 <- res$lin.coef.II[, 2]
   res$estimates <- c(res$estimates_B1, res$estimates_B2)
-  res$th_name <- as.character(formula)[2]
+  th_name <- as.character(formula)[2]
+  res$th_name <- th_name
 
   # # Log posterior of pn_me_reg.
   log_posterior_pn_me_reg <- function(params, data) {
@@ -111,3 +55,67 @@ pn_me_reg <- function(formula,
 
   res
 }
+
+
+
+
+#' @export
+print.pn_me_reg_mod <- function(x, ...) {
+  NextMethod()
+}
+
+
+#' @importFrom bpnreg coef_lin
+#' @export
+coef_lin.pn_me_reg_mod <- function(object) {
+  # list(lin_I  = object$lin.coef.I,
+  #      lin_II = object$lin.coef.II)
+  NextMethod()
+}
+
+#' @importFrom bpnreg coef_circ
+#' @export
+coef_circ.pn_me_reg_mod <- function(object, ...) {
+  # object$circ.coef
+  NextMethod()
+}
+
+
+#' @export
+coef.pn_me_reg_mod <- coefficients.pn_me_reg_mod <- function(object, ...) {
+  list(linear = coef_lin(object), circular = coef_circ(object))
+}
+
+
+
+#' @export
+predict.pn_me_reg_mod <- function(object, newdata, ...) {
+  NextMethod()
+}
+
+
+
+#' @export
+posterior_samples.pn_me_reg_mod <- function(x) {
+  B1 <- x$B.I
+  B2 <- x$B.II
+  Beta1 <- x$Beta.I
+  Beta2 <- x$Beta.II
+
+  list(B1, B2, Beta1, Beta2)
+}
+
+
+
+#' @export
+inf_crit.pn_me_reg_mod <- function(x, ...) {
+  ics <- x$model.fit
+  if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
+    ic_df <- t(data.frame(ics))
+    colnames(ic_df) <- "value"
+    return(ic_df)
+  } else {
+    return(ics)
+  }
+}
+

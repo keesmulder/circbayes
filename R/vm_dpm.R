@@ -1,27 +1,3 @@
-
-
-print.vm_dpm_mod <- function(x, digits = 3, ...) {
-  NextMethod()
-}
-
-
-coef.vm_dpm_mod <- coefficients.vm_dpm_mod <- function(x, ...) {
-  NextMethod()
-}
-
-
-posterior_samples.vm_dpm_mod <- function(x) {
-  NextMethod()
-}
-
-
-plot.vm_dpm_mod <- function(x, ...) {
-  plot_circbayes_dpm(x, ...)
-}
-
-
-
-
 #' Bayesian inference for Dirichlet Process Mixture of Von Mises distributions.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -29,7 +5,7 @@ plot.vm_dpm_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
 #'
-#' @return
+#' @return Object of type \code{vm_dpm_mod}.
 #' @export
 #'
 #' @examples
@@ -53,3 +29,32 @@ vm_dpm <- function(th,
 
   dp_obj
 }
+
+
+#' @export
+print.vm_dpm_mod <- function(x, digits = 3, ...) {
+  NextMethod()
+}
+
+
+#' @export
+coef.vm_dpm_mod <- coefficients.vm_dpm_mod <- function(x, ...) {
+  NextMethod()
+}
+
+
+#' @export
+posterior_samples.vm_dpm_mod <- function(x) {
+  NextMethod()
+}
+
+
+#' @export
+plot.vm_dpm_mod <- function(x, ...) {
+  plot_circbayes_dpm(x, ...)
+}
+
+
+
+
+

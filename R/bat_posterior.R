@@ -1,97 +1,3 @@
-
-#' Random generation for the Inverse Batschelet distribution.
-#'
-#' @param n Number of values to sample.
-#' @param mu Mean direction.
-#' @param kp Concentration parameter.
-#' @param lam Lambda, peakedness parameter, between -1 and 1. Positive values
-#'   give a peaked density, while negative values give flat-topped densities. .
-#'
-#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
-#'   distribution, in radians.
-#' @export
-#'
-#' @examples
-#' hist(rinvbat(1000, .3, 2, .8), breaks = 100)
-#'
-rinvbat <- function(n, mu = 0, kp = 1, lam = 0) {
-  circrad(flexcircmix::rinvbat(n, mu, kp, lam))
-}
-
-#' @rdname rinvbat Density function for Inverse Batschelet.
-dinvbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
-  flexcircmix::dinvbat(x, mu, kp, lam, log)
-}
-
-#' @rdname rinvbat Density function for Power Batschelet.
-dpowbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
-  flexcircmix::dpowbat(x, mu, kp, lam, log)
-}
-
-
-print.bat_posterior_mod <- function(x, digits = 3, ...) {
-  print(round(coef(x), digits))
-}
-
-
-coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
-  coef_mat <- x$mcmc_summary[-4, ]
-  rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
-
-  coef_mat
-}
-
-
-posterior_samples.bat_posterior_mod <- function(x) {
-  mat <- x$mcmc_sample[, 1:3]
-  colnames(mat) <- c("mu", "kp", "lam")
-
-  mat
-}
-
-
-plot.bat_posterior_mod <- function(x, ...) {
-  if (x$bat_type == "inverse") {
-    pdf_fun <- dinvbat
-  } else if (x$bat_type == "power") {
-    pdf_fun <- dpowbat
-  }
-
-  plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
-}
-
-
-
-
-
-
-marg_lik.bat_posterior_mod <- function(x, ...) {
-
-  sam <- posterior_samples(x)
-
-  lb <- c(-2*pi, 0, -1)
-  ub <- c(2*pi, Inf, 1)
-
-  names(lb) <- colnames(sam)
-  names(ub) <- colnames(sam)
-
-  bsobj <- bridgesampling::bridge_sampler(data = x$data,
-                                          samples = as.matrix(sam),
-                                          param_types = c("circular", "real", "real"),
-                                          log_posterior = x$log_posterior,
-                                          lb = lb, ub = ub,
-                                          silent = TRUE,
-                                          ...)
-
-  bridgesampling::logml(bsobj)
-}
-
-
-inf_crit.bat_posterior_mod <- function(x, ...) {
-  x$ic_mat
-}
-
-
 #' Posterior of the Power or Inverse Batschelet distribution.
 #'
 #' @param th Circular observations, either \code{numeric} in radians, or
@@ -99,7 +5,7 @@ inf_crit.bat_posterior_mod <- function(x, ...) {
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
 #'
-#' @return
+#' @return Object of type \code{bat_posterior_mod}.
 #' @export
 #'
 #' @examples
@@ -158,3 +64,102 @@ bat_posterior <- function(th,
 
   batpost_res
 }
+
+
+#' Inverse Batschelet distribution
+#'
+#' Random generation and probability for the Inverse Batschelet Distribution.
+#'
+#' @param n Number of values to sample.
+#' @param mu Mean direction.
+#' @param kp Concentration parameter.
+#' @param lam Lambda, peakedness parameter, between -1 and 1. Positive values
+#'   give a peaked density, while negative values give flat-topped densities. .
+#'
+#' @return Numeric vector of \code{n} samples from the Inverse Batschelet
+#'   distribution, in radians.
+#' @export
+#'
+#' @examples
+#' hist(rinvbat(1000, .3, 2, .8), breaks = 100)
+#'
+rinvbat <- function(n, mu = 0, kp = 1, lam = 0) {
+  circrad(flexcircmix::rinvbat(n, mu, kp, lam))
+}
+
+#' @describeIn rinvbat Density function for Inverse Batschelet.
+dinvbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
+  flexcircmix::dinvbat(x, mu, kp, lam, log)
+}
+
+#' @describeIn rinvbat Density function for Power Batschelet.
+dpowbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
+  flexcircmix::dpowbat(x, mu, kp, lam, log)
+}
+
+
+#' @export
+print.bat_posterior_mod <- function(x, digits = 3, ...) {
+  print(round(coef(x), digits))
+}
+
+
+#' @export
+coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
+  coef_mat <- x$mcmc_summary[-4, ]
+  rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
+
+  coef_mat
+}
+
+
+#' @export
+posterior_samples.bat_posterior_mod <- function(x) {
+  mat <- x$mcmc_sample[, 1:3]
+  colnames(mat) <- c("mu", "kp", "lam")
+
+  mat
+}
+
+
+#' @export
+plot.bat_posterior_mod <- function(x, ...) {
+  if (x$bat_type == "inverse") {
+    pdf_fun <- dinvbat
+  } else if (x$bat_type == "power") {
+    pdf_fun <- dpowbat
+  }
+
+  plot_circbayes_univariate(x, pdf_fun = pdf_fun, ...)
+}
+
+
+#' @export
+marg_lik.bat_posterior_mod <- function(x, ...) {
+
+  sam <- posterior_samples(x)
+
+  lb <- c(-2*pi, 0, -1)
+  ub <- c(2*pi, Inf, 1)
+
+  names(lb) <- colnames(sam)
+  names(ub) <- colnames(sam)
+
+  bsobj <- bridgesampling::bridge_sampler(data = x$data,
+                                          samples = as.matrix(sam),
+                                          param_types = c("circular", "real", "real"),
+                                          log_posterior = x$log_posterior,
+                                          lb = lb, ub = ub,
+                                          silent = TRUE,
+                                          ...)
+
+  bridgesampling::logml(bsobj)
+}
+
+
+#' @export
+inf_crit.bat_posterior_mod <- function(x, ...) {
+  x$ic_mat
+}
+
+

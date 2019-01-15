@@ -18,6 +18,9 @@ vm_reg(formula, data, conj_prior = c(0, 0, 0), beta_prior = c(0, 1),
 \item{prior}{Numeric of length 3. Prior parameters for conjugate prior of the
 von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
+\value{
+Object of type \code{vm_reg_mod}.
+}
 \description{
 Bayesian inference for von Mises regression.
 }

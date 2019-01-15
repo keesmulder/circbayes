@@ -11,14 +11,17 @@ marg_lik(x, ...)
 
 \item{...}{Further arguments.}
 }
+\value{
+Numeric; the log marginal likelihood.
+}
 \description{
-For most models in \code{circbayes}, this uses \code{\link{bridgesampling}}.
+For most models in \code{circbayes}, this uses \code{\link[bridgesampling]{bridge_sampler}}.
 }
 \examples{
 th <- rvm(40, 5, 8)
-vm_mod <- vm_posterior(th)
-pn_mod <- pn_posterior(th)
-bt_mod <- bt_posterior(th)
+vm_mod  <- vm_posterior(th)
+pn_mod  <- pn_posterior(th)
+bat_mod <- bat_posterior(th)
 mlvm <- marg_lik(vm_mod)
 mlpn <- marg_lik(pn_mod)
 mlbt <- marg_lik(bat_mod)
