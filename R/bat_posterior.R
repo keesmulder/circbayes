@@ -88,11 +88,13 @@ rinvbat <- function(n, mu = 0, kp = 1, lam = 0) {
 }
 
 #' @describeIn rinvbat Density function for Inverse Batschelet.
+#' @export
 dinvbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
   flexcircmix::dinvbat(x, mu, kp, lam, log)
 }
 
 #' @describeIn rinvbat Density function for Power Batschelet.
+#' @export
 dpowbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
   flexcircmix::dpowbat(x, mu, kp, lam, log)
 }

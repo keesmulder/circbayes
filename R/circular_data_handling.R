@@ -13,6 +13,7 @@ circular_to_circrad <- function(x) {
 }
 
 
+#' @export
 circrad <- function(x) {
   out <- force_neg_pi_pi(x)
   class(out) <- c("circrad", "numeric")
@@ -36,7 +37,7 @@ print.circrad <- function(x, ...) {
 }
 
 
-
+#' @export
 as.circrad <- function(x) {
 
   # Special treatment for 'circular' objects
@@ -57,6 +58,7 @@ as.circrad <- function(x) {
 }
 
 
+#' @export
 is.circrad <- function(x) inherits(x, "circrad")
 
 
@@ -65,6 +67,8 @@ resultant_length <- function(x) {
   sqrt(sum(sin(x))^2 + sum(cos(x))^2)/length(x)
 }
 
+
+#' @export
 mean.circrad <- function(x, ...) {
   S <- sum(sin(x))
   C <- sum(cos(x))
@@ -74,10 +78,15 @@ mean.circrad <- function(x, ...) {
   circrad(atan2(S, C))
 }
 
+
+#' @importFrom stats var
+#' @export
 var.circrad <- function(x, ...) {
   1 - resultant_length(x)
 }
 
+#' @importFrom stats sd
+#' @export
 sd.circrad <- function(x, ...) {
   sqrt(-2 * log(resultant_length(x)))
 }

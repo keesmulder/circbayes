@@ -21,7 +21,7 @@
 #' @export
 #'
 #' @examples
-#' dp <- Fit(DirichletProcessVonMises(rvmc(10, 2, 5)), 5)
+#' dp <- DirichletProcessVonMises(rvm(10, 2, 5))
 #' dp
 DirichletProcessVonMises <- function(y,
                                      g0Priors = c(0, 0, 1),

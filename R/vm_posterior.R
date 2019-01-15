@@ -145,7 +145,7 @@ print.vm_posterior_mod <- function(x, digits = 3, ...) {
 #' @describeIn vm_posterior Posterior summary of parameters.
 coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(x, ...) {
   coef_mat <- x$coef
-  colnames(coef_mat) <- c("estimate", "se", "2.5%", "97.5")
+  colnames(coef_mat) <- c("estimate", "se", "2.5%", "97.5%")
   coef_mat
 }
 
