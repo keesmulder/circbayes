@@ -74,6 +74,7 @@ marg_lik <- function(x, ...) {
 
 # This is the fall-back generic. If this doesn't work, a custom method must be
 # written.
+#' @export
 inf_crit.list <- function(x, ...) {
   nms <- names(x)
   ics <- x[grep("IC", nms, value = TRUE)]

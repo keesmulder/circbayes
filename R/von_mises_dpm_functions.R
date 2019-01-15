@@ -185,6 +185,7 @@ PosteriorParameters.vonmises <- function(mdobj, x) {
 
 
 
+#' @importFrom dirichletprocess Likelihood
 Likelihood.vonmises <- function(mdobj, x, theta) dvm_vec(x, theta[[1]], theta[[2]])
 
 
@@ -200,6 +201,7 @@ one_vm_post_draw <- function(mun, rn, m, nsamp = 3) {
 }
 
 
+#' @importFrom dirichletprocess PriorDraw
 PriorDraw.vonmises <- function(mdobj, n = 1) {
 
   priorParameters <- mdobj$priorParameters
@@ -228,6 +230,7 @@ PriorDraw.vonmises <- function(mdobj, n = 1) {
 }
 
 
+#' @importFrom dirichletprocess PosteriorDraw
 PosteriorDraw.vonmises <- function(mdobj, x, n = 1) {
 
   # If mu_0 is NA, and priorMeanSample is TRUE, sample uniform prior mean mu_0.
@@ -278,6 +281,7 @@ vmbesselexp_nc <- function(R, n) {
 }
 
 
+#' @importFrom dirichletprocess Predictive
 Predictive.vonmises <- function(mdobj, x) {
 
   # If uninformative prior, only do this once because the predictive will be the
