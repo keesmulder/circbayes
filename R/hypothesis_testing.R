@@ -20,7 +20,8 @@ marg_lik_circ_unif <- function(th) {
 }
 
 
-
+#' @export
+#' @describeIn bht_compare Print method.
 print.bht_comparison <- function(x, digits = 3, ...) {
   nmstr <- paste(x$names, collapse = ", ")
 

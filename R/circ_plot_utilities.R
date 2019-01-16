@@ -318,6 +318,7 @@ plot_circbayes_regression <- function(x,
                                       add_data      = TRUE,
                                       add_fit       = TRUE,
                                       n_samples     = 0,
+                                      n_x_eval      = 360,
                                       alpha_samples = .3,
                                       add_ci        = FALSE,
                                       qpts          = 100,
@@ -325,6 +326,7 @@ plot_circbayes_regression <- function(x,
                                       ...) {
 
   # Basic histogram without samples.
+  xdat <- x$data_X[, pred_name]
   p <- ggplot2::ggplot(data.frame(th = as.circrad(x$data_th), x = x$data_X[, pred_name]),
                        mapping = ggplot2::aes_string(x = "x", y = "th"))
 
@@ -347,6 +349,8 @@ plot_circbayes_regression <- function(x,
   if (add_ci) {
     param_mat <- posterior_samples(x)[, pred_params]
     p <- p + geom_mcmc_ci_sample(pred_fun,
+                                 x_grid = seq(min(xdat), max(xdat),
+                                              length.out = n_x_eval),
                                  param_mat = param_mat,
                                  qpts = min(qpts, nrow(param_mat)),
                                  linetype = "dashed")
