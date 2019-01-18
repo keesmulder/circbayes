@@ -62,3 +62,29 @@ test_that("Circular plotting works", {
 
 })
 
+
+context("Circular scales")
+
+test_that("Circular scales work", {
+
+  dat       <- data.frame(x = rvm(100) %% (2*pi) - pi)
+  sam       <- vm_posterior(dat, niter = 100)
+
+  p <- plot(sam, polar_coord = FALSE, r = 1) + ggplot2::theme_bw()
+
+
+  expect_warning(print(ggplot2::ggplot(dat)  +
+    ggplot2::geom_histogram(ggplot2::aes_string(x = "x", y = "..density.."),
+                            boundary = 0, bins = 10) +
+    scale_x_circular()))
+})
+
+
+
+
+
+
+
+
+
+
