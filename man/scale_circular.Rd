@@ -7,7 +7,7 @@
 \title{Circular ggplot scales}
 \usage{
 scale_circular(units = "degrees", nticks = 4, digits = 0,
-  limits = c(0, 2 * pi), positive_labels = TRUE,
+  limits = c(-pi, pi), positive_labels = TRUE,
   scale_function = ggplot2::scale_x_continuous, ...)
 
 scale_x_circular(...)
@@ -45,8 +45,16 @@ are useful for circular axes.
 Behind the screens, radians will be used, but the plot will display
 transformed values.
 
-The continuous transformations are \code{"radians"}, \code{"degrees"} and
-\code{"hours"}. For these, \code{nticks} and \code{digits} can be set.
+The input data of the plot on which a \code{scale_circular} is placed,
+therefore, must be given in radians, in the range provided in the option
+\code{limits}.
+
+The continuous transformations are \code{"radians"} and \code{"degrees"}, for
+which \code{digits} can be set.
+
+The temporal transformations are \code{"months"}, \code{"months_abb"}
+(abbreviated), and \code{"hours"}.  For both of these types of
+transformations, \code{nticks}.
 
 The categorical transformations are \code{"cardinal"}, which prints character
 labels of the directions (left, right, up, down), and \code{"compass"}, which
@@ -67,11 +75,11 @@ This is useful if TikZ is used.
 }}
 
 \examples{
-p <- plot_batmixfit(params = cbind(mu = c(-pi/2, 0, pi/2, pi), kp = 4,
-                              lam = c(-.9, .2, .8, 0), alph = .25))
+dat <- data.frame(rvm_reg(100))
+p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
+       ggplot2::geom_histogram(bins = 24)
 
 p + scale_x_circular(units = "compass")
-p + scale_x_circular(units = "compass", limits = c(-1, 2*pi - 1))
 
 p + scale_x_circular(units = "cardinal")
 

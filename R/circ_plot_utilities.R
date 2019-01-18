@@ -24,7 +24,7 @@ gg_circular_elems <- function(r = 1, ymax = NA, start = pi/2, direction = -1) {
 
 
 breaks_circular <- function(units = "degrees", nticks = 4,
-                            digits = 0, limits = c(0, 2 * pi),
+                            digits = 0, limits = c(-pi, pi),
                             positive_labels = TRUE,
                             scale_function = ggplot2::scale_x_continuous, ...) {
 
@@ -58,17 +58,18 @@ breaks_circular <- function(units = "degrees", nticks = 4,
   orig_brks <- brks
   if (positive_labels) brks <- brks %% (2*pi)
 
-  conv_brks <- switch(
-    units,
-    radians  = round(brks, digits),
-    degrees  = round(brks * 180 / pi, digits),
-    hours    = round(brks * 12 / pi, digits),
-    texpi    = c("$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
+  conv_brks <- switch(units,
+    radians    = round(brks, digits),
+    degrees    = round(brks * 180 / pi, digits),
+    hours      = round(brks * 12 / pi, digits),
+    months_abb = month.abb[(floor(brks * 6 / pi) %% 12) + 1],
+    months     = month.name[(floor(brks * 6 / pi) %% 12) + 1],
+    texpi      = c("$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
                  "$\\frac{3\\pi}{2}$", "$2\\pi$"),
-    texnegpi = c("$-\\pi$", "$-\\frac{\\pi}{2}$", "$0$",
+    texnegpi   = c("$-\\pi$", "$-\\frac{\\pi}{2}$", "$0$",
                  "$\\frac{\\pi}{2}$", "$\\pi$"),
-    cardinal = c("Right", "Up", "Left", "Down")[c(3:4, 1:4, 1:3)],
-    compass  = c("East", "North", "West", "South")[c(3:4, 1:4, 1:3)])
+    cardinal   = c("Right", "Up", "Left", "Down")[c(3:4, 1:4, 1:3)],
+    compass   = c("East", "North", "West", "South")[c(3:4, 1:4, 1:3)])
 
   list(breaks = orig_brks,
        labels = conv_brks,
@@ -84,8 +85,16 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #' Behind the screens, radians will be used, but the plot will display
 #' transformed values.
 #'
-#' The continuous transformations are \code{"radians"}, \code{"degrees"} and
-#' \code{"hours"}. For these, \code{nticks} and \code{digits} can be set.
+#' The input data of the plot on which a \code{scale_circular} is placed,
+#' therefore, must be given in radians, in the range provided in the option
+#' \code{limits}.
+#'
+#' The continuous transformations are \code{"radians"} and \code{"degrees"}, for
+#' which \code{digits} can be set.
+#'
+#' The temporal transformations are \code{"months"}, \code{"months_abb"}
+#' (abbreviated), and \code{"hours"}.  For both of these types of
+#' transformations, \code{nticks}.
 #'
 #' The categorical transformations are \code{"cardinal"}, which prints character
 #' labels of the directions (left, right, up, down), and \code{"compass"}, which
@@ -116,11 +125,11 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #' @export
 #'
 #' @examples
-#' p <- plot_batmixfit(params = cbind(mu = c(-pi/2, 0, pi/2, pi), kp = 4,
-#'                               lam = c(-.9, .2, .8, 0), alph = .25))
+#' dat <- data.frame(rvm_reg(100))
+#' p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
+#'        ggplot2::geom_histogram(bins = 24)
 #'
 #' p + scale_x_circular(units = "compass")
-#' p + scale_x_circular(units = "compass", limits = c(-1, 2*pi - 1))
 #'
 #' p + scale_x_circular(units = "cardinal")
 #'
@@ -129,8 +138,15 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #'
 #' p + scale_x_circular(units = "hours", nticks = 24)
 #'
+#' dat <- data.frame(th = rvm(100) + pi)
+#' p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
+#'        ggplot2::geom_histogram(bins = 24, boundary = 0)
+#'
+#' p + scale_x_circular(units = "months", nticks = 6, limits = c(0, 2*pi))
+#' p + scale_x_circular(units = "months_abb", nticks = 12, limits = c(0, 2*pi))
+#'
 scale_circular <- function(units = "degrees", nticks = 4,
-                           digits = 0, limits = c(0, 2 * pi),
+                           digits = 0, limits = c(-pi, pi),
                            positive_labels = TRUE,
                            scale_function = ggplot2::scale_x_continuous, ...) {
 
@@ -193,7 +209,7 @@ plot_circbayes_univariate <- function(x,
                                       n_samples   = 0,
                                       add_ci      = FALSE,
                                       bins        = 90,
-                                      r = 3,
+                                      r = 1,
                                       ymax = NA,
                                       qpts        = 100,
                                       start       = pi/2,
@@ -261,7 +277,7 @@ plot_circbayes_dpm <- function(x,
                                n_samples   = 0,
                                add_ci      = TRUE,
                                bins        = 90,
-                               r = 3,
+                               r = 1,
                                ymax = NA,
                                add_median  = TRUE,
                                qpts        = 100,

@@ -69,14 +69,22 @@ test_that("Circular scales work", {
 
   dat       <- data.frame(x = rvm(100) %% (2*pi) - pi)
   sam       <- vm_posterior(dat, niter = 100)
-
   p <- plot(sam, polar_coord = FALSE, r = 1) + ggplot2::theme_bw()
 
-
-  expect_warning(print(ggplot2::ggplot(dat)  +
+  p2 <- ggplot2::ggplot(dat)  +
     ggplot2::geom_histogram(ggplot2::aes_string(x = "x", y = "..density.."),
-                            boundary = 0, bins = 10) +
-    scale_x_circular()))
+                            boundary = 0, bins = 10) + scale_x_circular()
+
+  expect_warning(print(p2))
+
+  expect_is(breaks_circular("degrees"), "list")
+  expect_is(breaks_circular("radians"), "list")
+  expect_is(breaks_circular("hours"), "list")
+  expect_is(breaks_circular("months"), "list")
+  expect_is(breaks_circular("texpi"), "list")
+  expect_is(breaks_circular("texnegpi"), "list")
+  expect_is(breaks_circular("cardinal"), "list")
+  expect_is(breaks_circular("compass"), "list")
 })
 
 
