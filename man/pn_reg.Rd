@@ -7,15 +7,20 @@
 pn_reg(formula, data, niter = 1000, thin = 1, burnin = 0, ...)
 }
 \arguments{
+\item{formula}{an object of class "\code{\link{formula}}" (or one that can be
+coerced to that class): a symbolic description of the model to be fitted.}
+
+\item{data}{A data frame or matrix containing the circular observations and
+predictors.}
+
 \item{niter}{Number of iterations to perform MCMC for.}
 
+\item{thin}{Integer; Factor of thinning. Setting \code{thin = 1} provides no
+thinning.}
+
+\item{burnin}{Integer; Number of iterations to burn.}
+
 \item{...}{Further arguments passed to \code{circglmbayes::circGLM}.}
-
-\item{th}{Circular observations, either \code{numeric} in radians, or
-\code{circular}.}
-
-\item{prior}{Numeric of length 3. Prior parameters for conjugate prior of the
-von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
 \value{
 Object of type \code{pn_reg_mod}.

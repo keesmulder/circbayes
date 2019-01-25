@@ -3,6 +3,28 @@
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.
 #' @param niter Number of iterations to perform MCMC for.
+#' @param n_comp Integer; Fixed number of components to estimate.
+#' @param bat_type Either 'inverse' or 'power', the type of distribution to fit.
+#'   The two distributions are similar, but the power Batschelet distribution is
+#'   computationally much less demanding.
+#' @param fixed_pmat A numeric matrix with \code{n_comp} rows and four columns,
+#'   corresponding to \eqn{\mu, \kappa, \lambda, \alpha}, in that order. Any
+#'   element that is not \code{NA} in this matrix will be held constant at the
+#'   given value and not sampled.
+#' @param mu_logprior_fun Function; A function with a single argument, which
+#'   returns the log of the prior probability of \eqn{\mu}. Defaults to a
+#'   uniform prior function.
+#' @param kp_logprior_fun Function; A function with a single argument, which
+#'   returns the log of the prior probability of \eqn{\kappa}. Defaults to a
+#'   uniform prior function. In contrast to the other parameters, for
+#'   \eqn{\kappa} the constant (uniform) prior is improper.
+#' @param lam_logprior_fun Function; A function with a single argument, which
+#'   returns the log of the prior probability of \eqn{\lambda}. Defaults to a
+#'   uniform prior function.
+#' @param alph_prior_param Integer vector; The mixture weight parameter vector
+#'   \eqn{\alpha} is given its conjugate Dirichlet prior. The default is
+#'   \code{rep(1, n_comp)}, which is the noninformative uniform prior over the
+#'   \code{n_comp} simplex.
 #' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
 #'
 #' @return Object of type \code{bat_mix_mod}.

@@ -4,6 +4,9 @@
 #'   \code{circular}.
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{bpnreg::bpnr}.
+#' @param thin Integer; Factor of thinning. Setting \code{thin = 1} provides no
+#'   thinning.
+#' @param burnin Integer; Number of iterations to burn.
 #'
 #' @return Object of type \code{pn_posterior_mod}.
 #' @export

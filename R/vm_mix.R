@@ -3,7 +3,23 @@
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.
 #' @param niter Number of iterations to perform MCMC for.
-#' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
+#' @param n_comp Integer; Number of mixture components.
+#' @param mu_logprior_fun Function; A function with a single argument, which
+#'   returns the log of the prior probability of \eqn{\mu}. Defaults to a
+#'   uniform prior function.
+#' @param kp_logprior_fun Function; A function with a single argument, which
+#'   returns the log of the prior probability of \eqn{\kappa}. Defaults to a
+#'   uniform prior function. In contrast to the other parameters, for
+#'   \eqn{\kappa} the constant (uniform) prior is improper.
+#' @param alph_prior_param Integer vector; The mixture weight parameter vector
+#'   \eqn{\alpha} is given its conjugate Dirichlet prior. The default is
+#'   \code{rep(1, n_comp)}, which is the noninformative uniform prior over the
+#'   \code{n_comp} simplex.
+#' @param fixed_pmat A numeric matrix with \code{n_comp} rows and four columns,
+#'   corresponding to \eqn{\mu, \kappa, \lambda, \alpha}, in that order. Any
+#'   element that is not \code{NA} in this matrix will be held constant at the
+#'   given value and not sampled.
+#' @param ... Further arguments passed to \code{flexcircmix::fitbatmix}.
 #'
 #' @return Object of type \code{vm_mix_mod}.
 #' @export
@@ -15,7 +31,6 @@ vm_mix <- function(th,
                    n_comp = 3,
                    mu_logprior_fun  = function(mu)  0,
                    kp_logprior_fun  = function(kp)  0,
-                   lam_logprior_fun = function(lam) 0,
                    alph_prior_param = rep(1, n_comp),
                    fixed_pmat       = matrix(NA, n_comp, 4),
                    niter = 1000, ...) {
@@ -41,8 +56,7 @@ vm_mix <- function(th,
                                 bat_type = "power",
                                 fixed_pmat = fixed_pmat,
                                 mu_logprior_fun  = mu_logprior_fun,
-                                kp_logprior_fun  = kp_logprior_fun,
-                                lam_logprior_fun = lam_logprior_fun, ...)
+                                kp_logprior_fun  = kp_logprior_fun, ...)
 
   vmmix_res <- c(res,
                  list(data = res$x))

@@ -2,27 +2,36 @@
 % Please edit documentation in R/pn_me_reg.R
 \name{pn_me_reg}
 \alias{pn_me_reg}
-\title{Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.}
+\title{Bayesian inference for Hierarchical (Mixed-effects) Projected Normal
+regression.}
 \usage{
 pn_me_reg(formula, data, niter = 1000, thin = 1, burnin = 0,
   silent = TRUE, ...)
 }
 \arguments{
+\item{formula}{an object of class "\code{\link{formula}}" (or one that can be
+coerced to that class): a symbolic description of the model to be fitted.}
+
+\item{data}{A data frame or matrix containing the circular observations and
+predictors.}
+
 \item{niter}{Number of iterations to perform MCMC for.}
 
+\item{thin}{Integer; Factor of thinning. Setting \code{thin = 1} provides no
+thinning.}
+
+\item{burnin}{Integer; Number of iterations to burn.}
+
+\item{silent}{Logical; whether to prevent iteration progress messages.}
+
 \item{...}{Further arguments passed to \code{circglmbayes::circGLM}.}
-
-\item{th}{Circular observations, either \code{numeric} in radians, or
-\code{circular}.}
-
-\item{prior}{Numeric of length 3. Prior parameters for conjugate prior of the
-von Mises distribution. The order is \eqn{\mu_0, R_0, c}.}
 }
 \value{
 Object of type \code{pn_me_reg_mod}.
 }
 \description{
-Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.
+Bayesian inference for Hierarchical (Mixed-effects) Projected Normal
+regression.
 }
 \examples{
 pn_me_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))

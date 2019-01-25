@@ -111,6 +111,7 @@ rbesselexp2 <- function(n, mu, mu_n, R_n, n_n) {
 }
 
 
+#' @export
 #' @importFrom dirichletprocess PosteriorParameters
 #' @importFrom stats runif
 PosteriorParameters.vonmises <- function(mdobj, x) {
@@ -185,6 +186,7 @@ PosteriorParameters.vonmises <- function(mdobj, x) {
 
 
 
+#' @export
 #' @importFrom dirichletprocess Likelihood
 Likelihood.vonmises <- function(mdobj, x, theta) dvm_vec(x, theta[[1]], theta[[2]])
 
@@ -200,7 +202,7 @@ one_vm_post_draw <- function(mun, rn, m, nsamp = 3) {
   c(mu, kp)
 }
 
-
+#' @export
 #' @importFrom dirichletprocess PriorDraw
 PriorDraw.vonmises <- function(mdobj, n = 1) {
 
@@ -230,6 +232,7 @@ PriorDraw.vonmises <- function(mdobj, n = 1) {
 }
 
 
+#' @export
 #' @importFrom dirichletprocess PosteriorDraw
 PosteriorDraw.vonmises <- function(mdobj, x, n = 1) {
 
@@ -281,6 +284,7 @@ vmbesselexp_nc <- function(R, n) {
 }
 
 
+#' @export
 #' @importFrom dirichletprocess Predictive
 Predictive.vonmises <- function(mdobj, x) {
 

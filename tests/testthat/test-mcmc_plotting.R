@@ -85,6 +85,8 @@ test_that("Circular scales work", {
   expect_is(breaks_circular("texnegpi"), "list")
   expect_is(breaks_circular("cardinal"), "list")
   expect_is(breaks_circular("compass"), "list")
+
+
 })
 
 

@@ -26,6 +26,15 @@ test_that("Posterior sampling", {
 })
 
 
+tdf <- cbind(th_df, c_fac1 = rep(factor(1:4), 5), c_fac2 = rep(factor(1:2), 10))
+
+test_that("Regression tests", {
+  expect_is(pn_reg(th ~ c_fac1, tdf, burnin = 10, niter = 20), "pn_reg_mod")
+  expect_is(pn_reg(th ~ 1,      tdf, burnin = 10, niter = 20), "pn_reg_mod")
+  expect_is(pn_reg(th ~ .^2,    tdf, burnin = 10, niter = 20), "pn_reg_mod")
+})
+
+
 test_that("Predict", {
   expect_is(predict(mod, newdata = as.matrix(th_df)), "matrix")
 })

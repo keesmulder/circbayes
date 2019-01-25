@@ -4,7 +4,7 @@
 #' object.
 #'
 #' @param object Object to extract samples from.
-#' @param ...
+#' @param ... Further arguments.
 #'
 #' @return A matrix of posterior samples.
 #' @export
@@ -77,7 +77,8 @@ marg_lik <- function(x, ...) {
 #' @export
 inf_crit.list <- function(x, ...) {
   nms <- names(x)
-  ics <- x[grep("IC", nms, value = TRUE)]
+  ic_nms <- sort(grep("IC", nms, value = TRUE))
+  ics <- x[ic_nms]
   if (all(vapply(ics, length, FUN.VALUE = 0) == 1)) {
     ic_df <- t(data.frame(ics))
     colnames(ic_df) <- "value"

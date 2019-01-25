@@ -8,6 +8,8 @@
 #' @return Object of type \code{bat_posterior_mod}.
 #' @export
 #'
+#' @inheritParams bat_mix
+#'
 #' @examples
 #' bat_posterior(rvm(30, 2, 5))
 #'

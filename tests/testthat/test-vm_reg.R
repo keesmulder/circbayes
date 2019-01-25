@@ -2,10 +2,10 @@ context("Von Mises Regression")
 
 set.seed(11)
 
-th_df <- rvm_reg(30, beta = .5, kp = 50)
+th_df <- rvm_reg(20, beta = .5, kp = 50)
 
 test_that("Random generation", {
-  expect_equal(nrow(th_df), 30)
+  expect_equal(nrow(th_df), 20)
   expect_is(th_df, "matrix")
 })
 
@@ -28,6 +28,16 @@ test_that("Posterior sampling", {
   expect_is(plot(mod2), "gg")
   expect_is(coef(mod2), "matrix")
 })
+
+
+tdf <- cbind(th_df, c_fac1 = rep(factor(1:4), 5), c_fac2 = rep(factor(1:2), 10))
+
+test_that("Regression tests", {
+  expect_is(vm_reg(th ~ c_fac1, data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
+  expect_is(vm_reg(th ~ 1,      data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
+  expect_is(vm_reg(th ~ .^2,    data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
+})
+
 
 
 test_that("Predict", {

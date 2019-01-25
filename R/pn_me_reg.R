@@ -1,9 +1,14 @@
-#' Bayesian inference for Hierarchical (Mixed-effects) Projected Normal regression.
+#' Bayesian inference for Hierarchical (Mixed-effects) Projected Normal
+#' regression.
 #'
-#' @param th Circular observations, either \code{numeric} in radians, or
-#'   \code{circular}.
-#' @param prior Numeric of length 3. Prior parameters for conjugate prior of the
-#'   von Mises distribution. The order is \eqn{\mu_0, R_0, c}.
+#' @param formula an object of class "\code{\link{formula}}" (or one that can be
+#'   coerced to that class): a symbolic description of the model to be fitted.
+#' @param data A data frame or matrix containing the circular observations and
+#'   predictors.
+#' @param thin Integer; Factor of thinning. Setting \code{thin = 1} provides no
+#'   thinning.
+#' @param burnin Integer; Number of iterations to burn.
+#' @param silent Logical; whether to prevent iteration progress messages.
 #' @param niter Number of iterations to perform MCMC for.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
@@ -28,8 +33,9 @@ pn_me_reg <- function(formula,
     res <- bpnreg::bpnme(pred.I = formula, data = data,
                         its = niter, n.lag = thin, burn = burnin, ...)
   } else {
-    capture.output(res <- bpnreg::bpnme(pred.I = formula, data = data,
-                        its = niter, n.lag = thin, burn = burnin, ...))
+    utils::capture.output(res <- bpnreg::bpnme(pred.I = formula, data = data,
+                                               its = niter, n.lag = thin,
+                                               burn = burnin, ...))
   }
 
   class(res) <- c("pn_me_reg_mod", class(res))

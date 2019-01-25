@@ -3,6 +3,10 @@
 #' @param th Circular observations, either \code{numeric} in radians, or
 #'   \code{circular}.
 #' @param niter Number of iterations to perform MCMC for.
+#' @param g0Priors Prior for the base distribution, which is the conjugate to
+#'   the von Mises posterior.
+#' @param alphaPriors Prior parameters (a, b) for the gamma prior on the
+#'   Dirichlet process parameter \eqn{\alpha}. Acts on the number of components.
 #' @param ... Further arguments passed to \code{circglmbayes::fitbatmix}.
 #'
 #' @return Object of type \code{vm_dpm_mod}.

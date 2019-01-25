@@ -1,11 +1,14 @@
 
 #' Bayesian inference for Projected Normal regression.
 #'
-#' @param th Circular observations, either \code{numeric} in radians, or
-#'   \code{circular}.
-#' @param prior Numeric of length 3. Prior parameters for conjugate prior of the
-#'   von Mises distribution. The order is \eqn{\mu_0, R_0, c}.
+#' @param formula an object of class "\code{\link{formula}}" (or one that can be
+#'   coerced to that class): a symbolic description of the model to be fitted.
+#' @param data A data frame or matrix containing the circular observations and
+#'   predictors.
 #' @param niter Number of iterations to perform MCMC for.
+#' @param thin Integer; Factor of thinning. Setting \code{thin = 1} provides no
+#'   thinning.
+#' @param burnin Integer; Number of iterations to burn.
 #' @param ... Further arguments passed to \code{circglmbayes::circGLM}.
 #'
 #' @return Object of type \code{pn_reg_mod}.
@@ -111,7 +114,9 @@ coef_lin.pn_reg_mod <- function(object) {
 #' @export
 coef_circ.pn_reg_mod <- function(object, ...) {
   coef_mat <- NextMethod()
-  colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  if (!is.character(coef_mat)) {
+    colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
+  }
   coef_mat
 }
 

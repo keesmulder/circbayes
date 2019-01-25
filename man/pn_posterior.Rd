@@ -12,6 +12,11 @@ pn_posterior(th, niter = 1000, thin = 1, burnin = 0, ...)
 
 \item{niter}{Number of iterations to perform MCMC for.}
 
+\item{thin}{Integer; Factor of thinning. Setting \code{thin = 1} provides no
+thinning.}
+
+\item{burnin}{Integer; Number of iterations to burn.}
+
 \item{...}{Further arguments passed to \code{bpnreg::bpnr}.}
 }
 \value{

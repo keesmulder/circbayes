@@ -11,6 +11,12 @@ vm_dpm(th, g0Priors = c(0, 0, 1), alphaPriors = c(2, 4),
 \item{th}{Circular observations, either \code{numeric} in radians, or
 \code{circular}.}
 
+\item{g0Priors}{Prior for the base distribution, which is the conjugate to
+the von Mises posterior.}
+
+\item{alphaPriors}{Prior parameters (a, b) for the gamma prior on the
+Dirichlet process parameter \eqn{\alpha}. Acts on the number of components.}
+
 \item{niter}{Number of iterations to perform MCMC for.}
 
 \item{...}{Further arguments passed to \code{circglmbayes::fitbatmix}.}

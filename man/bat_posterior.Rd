@@ -12,6 +12,23 @@ bat_posterior(th, bat_type = "power", mu_logprior_fun = function(mu) 0,
 \item{th}{Circular observations, either \code{numeric} in radians, or
 \code{circular}.}
 
+\item{bat_type}{Either 'inverse' or 'power', the type of distribution to fit.
+The two distributions are similar, but the power Batschelet distribution is
+computationally much less demanding.}
+
+\item{mu_logprior_fun}{Function; A function with a single argument, which
+returns the log of the prior probability of \eqn{\mu}. Defaults to a
+uniform prior function.}
+
+\item{kp_logprior_fun}{Function; A function with a single argument, which
+returns the log of the prior probability of \eqn{\kappa}. Defaults to a
+uniform prior function. In contrast to the other parameters, for
+\eqn{\kappa} the constant (uniform) prior is improper.}
+
+\item{lam_logprior_fun}{Function; A function with a single argument, which
+returns the log of the prior probability of \eqn{\lambda}. Defaults to a
+uniform prior function.}
+
 \item{niter}{Number of iterations to perform MCMC for.}
 
 \item{...}{Further arguments passed to \code{circglmbayes::fitbatmix}.}
