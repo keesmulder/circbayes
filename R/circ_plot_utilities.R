@@ -127,15 +127,13 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #' @export
 #'
 #' @examples
-#' dat <- data.frame(rvm_reg(100))
-#' p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
-#'        ggplot2::geom_histogram(bins = 24)
+#' dat <- rvm(100)
+#' p <- plot(vm_posterior(dat), polar_coord = FALSE)
 #'
 #' p + scale_x_circular(units = "compass")
 #'
 #' p + scale_x_circular(units = "cardinal")
 #'
-#' p + scale_x_circular(units = "texpi")
 #' p + scale_x_circular(units = "texnegpi")
 #'
 #' p + scale_x_circular(units = "hours", nticks = 24)

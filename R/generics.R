@@ -17,7 +17,7 @@ posterior_samples <- function(object, ...)  {
 }
 
 
-#' Obtain the prediction function of a VM regression object.
+#' Obtain the prediction function of a regression object.
 #'
 #' @param x Object.
 #' @param ... Further arguments.
