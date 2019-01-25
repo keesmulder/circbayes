@@ -20,21 +20,35 @@ marg_lik_circ_unif <- function(th) {
 }
 
 
+#' Print function for Bayesian hypothesis testing.
+#'
+#' @param x Object of type \code{bht_comparison}.
+#' @param digits Number of digits to print.
+#' @param ... Further arguments.
+#'
 #' @export
 #' @describeIn bht_compare Print method.
+#'
+#' @examples
+#' th <- rvm(100, 3, .2)
+#'
+#' vm_mod <- vm_posterior(th, prior = c(0, 0, 1))
+#'
+#' cu_ml <- marg_lik_circ_unif(th)
+#' vm_ml <- marg_lik(vm_mod)
+#'
+#' bht_compare(uniform = cu_ml, von_mises = vm_ml)
 print.bht_comparison <- function(x, digits = 3, ...) {
   nmstr <- paste(x$names, collapse = ", ")
 
   cat("Bayesian Hypothesis Test\n")
   cat(paste("    Comparing", length(x$names), "models:", nmstr))
-  cat("\n\n[Log Marginal Likelihood]\n\n")
+  cat("\n\n[Log Marginal Likelihood]\n")
   print(x$log_marg_lik_vec)
-  cat("\n\n[Posterior Model Probabilities]\n\n")
+  cat("\n[Posterior Model Probabilities]\n")
   print(x$post_mod_prob)
-  cat("\n\n[Pairwise log Bayes Factors]\n")
-  cat("  (Positive values support models in the rows)\n\n")
+  cat("\n[Pairwise log Bayes Factors]\n")
   print(x$log_bf_mat)
-  cat("\n")
 }
 
 
