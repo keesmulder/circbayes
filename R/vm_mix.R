@@ -144,16 +144,16 @@ print.vm_mix_mod <- function(x, digits = 3, ...) {
 
 
 #' @export
-coef.vm_mix_mod <- coefficients.vm_mix_mod <- function(x, ...) {
-  coef_mat <- x$mcmc_summary
+coef.vm_mix_mod <- coefficients.vm_mix_mod <- function(object, ...) {
+  coef_mat <- object$mcmc_summary
   coef_mat[!grepl("lam_", rownames(coef_mat)), ]
 }
 
 
 #' @export
-posterior_samples.vm_mix_mod <- function(x) {
-  mat <- x$mcmc_sample[, 1:(x$n_components * 4)]
-  mat[, !(x$which_lam[1:ncol(mat)])]
+posterior_samples.vm_mix_mod <- function(object, ...) {
+  mat <- object$mcmc_sample[, 1:(object$n_components * 4)]
+  mat[, !(object$which_lam[1:ncol(mat)])]
 }
 
 

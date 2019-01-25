@@ -78,22 +78,18 @@ This is useful if TikZ is used.
 }}
 
 \examples{
-dat <- data.frame(rvm_reg(100))
-p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
-       ggplot2::geom_histogram(bins = 24)
+dat <- rvm(100)
+p <- plot(vm_posterior(dat), polar_coord = FALSE)
 
 p + scale_x_circular(units = "compass")
 
 p + scale_x_circular(units = "cardinal")
 
-p + scale_x_circular(units = "texpi")
 p + scale_x_circular(units = "texnegpi")
 
 p + scale_x_circular(units = "hours", nticks = 24)
 
 dat <- data.frame(th = rvm(100) + pi)
-p <- ggplot2::ggplot(data = dat, ggplot2::aes(th)) +
-       ggplot2::geom_histogram(bins = 24, boundary = 0)
 
 p + scale_x_circular(units = "months", nticks = 6, limits = c(0, 2*pi))
 p + scale_x_circular(units = "months_abb", nticks = 12, limits = c(0, 2*pi))

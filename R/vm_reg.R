@@ -16,7 +16,8 @@
 #' @export
 #'
 #' @examples
-#' vm_reg(rvm(30, 2, 5))
+#' dat <- rvm_reg(30)
+#' vm_reg(th ~ ., data = dat)
 #'
 vm_reg <- function(formula,
                    data,
@@ -151,7 +152,7 @@ print.vm_reg_mod <- function(x, ...) {
 
 
 #' @export
-coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(x, ...) {
+coef.vm_reg_mod <- coefficients.vm_reg_mod <- function(object, ...) {
   res <- NextMethod()
   colnames(res) <- c("estimate", "se", "2.5%", "97.5%")
   res
@@ -189,10 +190,10 @@ predict_function.vm_reg_mod <- function(object,
 
 
 #' @export
-posterior_samples.vm_reg_mod <- function(x) {
-  n_param <- 2 + length(x$bt_mean) + length(x$dt_meandir)
-  post_sam <- x$all_chains[, 1:n_param]
-  colnames(post_sam) <- x$parnames
+posterior_samples.vm_reg_mod <- function(object, ...) {
+  n_param <- 2 + length(object$bt_mean) + length(object$dt_meandir)
+  post_sam <- object$all_chains[, 1:n_param]
+  colnames(post_sam) <- object$parnames
   post_sam
 }
 

@@ -33,7 +33,3 @@ Object of type \code{pn_me_reg_mod}.
 Bayesian inference for Hierarchical (Mixed-effects) Projected Normal
 regression.
 }
-\examples{
-pn_me_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))
-
-}

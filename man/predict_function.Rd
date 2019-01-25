@@ -2,12 +2,12 @@
 % Please edit documentation in R/generics.R
 \name{predict_function}
 \alias{predict_function}
-\title{Obtain the prediction function of a VM regression object.}
+\title{Obtain the prediction function of a regression object.}
 \usage{
-predict_function(x, ...)
+predict_function(object, ...)
 }
 \arguments{
-\item{x}{Object.}
+\item{object}{Object.}
 
 \item{...}{Further arguments.}
 }
@@ -15,5 +15,5 @@ predict_function(x, ...)
 A function.
 }
 \description{
-Obtain the prediction function of a VM regression object.
+Obtain the prediction function of a regression object.
 }

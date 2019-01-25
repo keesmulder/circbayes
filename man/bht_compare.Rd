@@ -3,7 +3,7 @@
 \name{print.bht_comparison}
 \alias{print.bht_comparison}
 \alias{bht_compare}
-\title{Bayesian hypothesis tests from marginal likelihoods.}
+\title{Print function for Bayesian hypothesis testing.}
 \usage{
 \method{print}{bht_comparison}(x, digits = 3, ...)
 
@@ -14,14 +14,14 @@ bht_compare(...)
 
 \item{digits}{Number of digits to print.}
 
-\item{...}{Further arguments.}
-
 \item{...}{(Named) list of models.}
 }
 \value{
 Object of type \code{'bht_comparison'}.
 }
 \description{
+Print function for Bayesian hypothesis testing.
+
 Bayesian hypothesis tests from marginal likelihoods.
 }
 \section{Methods (by generic)}{
@@ -30,6 +30,14 @@ Bayesian hypothesis tests from marginal likelihoods.
 }}
 
 \examples{
+th <- rvm(100, 3, .2)
+
+vm_mod <- vm_posterior(th, prior = c(0, 0, 1))
+
+cu_ml <- marg_lik_circ_unif(th)
+vm_ml <- marg_lik(vm_mod)
+
+bht_compare(uniform = cu_ml, von_mises = vm_ml)
 # Test circular uniformity versus von mises.
 th     <- rvm(30, 0, 1)
 vm_mod <- vm_posterior(th)

@@ -95,6 +95,8 @@ logBesselI <- function(x, nu = 0) {
 
 
 #' @export
+#'
+#' @param x Angle in radians at which to evalu
 #' @describeIn rvm Probability density function.
 dvm <- function(x, mu = 0, kp = 1, log = FALSE) {
   logp <- kp * cos(x - mu) - log(2 * pi) - logBesselI(kp, 0)
@@ -142,8 +144,8 @@ print.vm_posterior_mod <- function(x, digits = 3, ...) {
 #' @importFrom stats coef
 #' @export
 #' @describeIn vm_posterior Posterior summary of parameters.
-coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(x, ...) {
-  coef_mat <- x$coef
+coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(object, ...) {
+  coef_mat <- object$coef
   colnames(coef_mat) <- c("estimate", "se", "2.5%", "97.5%")
   coef_mat
 }
@@ -151,9 +153,9 @@ coef.vm_posterior_mod <- coefficients.vm_posterior_mod <- function(x, ...) {
 
 #' @export
 #' @describeIn vm_posterior Posterior samples (only model parameters, not derived).
-posterior_samples.vm_posterior_mod <- function(x) {
-  sam <- cbind(x$mu_chain,
-               x$kp_chain)
+posterior_samples.vm_posterior_mod <- function(object, ...) {
+  sam <- cbind(object$mu_chain,
+               object$kp_chain)
   colnames(sam) <- c("mu", "kappa")
   sam
 }

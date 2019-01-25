@@ -33,6 +33,7 @@ Object of type \code{vm_reg_mod}.
 Bayesian inference for von Mises regression.
 }
 \examples{
-vm_reg(rvm(30, 2, 5))
+dat <- rvm_reg(30)
+vm_reg(th ~ ., data = dat)
 
 }

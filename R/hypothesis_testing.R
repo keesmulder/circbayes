@@ -24,7 +24,6 @@ marg_lik_circ_unif <- function(th) {
 #'
 #' @param x Object of type \code{bht_comparison}.
 #' @param digits Number of digits to print.
-#' @param ... Further arguments.
 #'
 #' @export
 #' @describeIn bht_compare Print method.

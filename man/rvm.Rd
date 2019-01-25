@@ -15,6 +15,8 @@ dvm(x, mu = 0, kp = 1, log = FALSE)
 \item{mu}{Mean direction.}
 
 \item{kp}{Concentration parameter.}
+
+\item{x}{Angle in radians at which to evalu}
 }
 \value{
 Numeric vector of \code{n} samples from the von Mises disttribution,

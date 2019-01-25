@@ -19,14 +19,14 @@ posterior_samples <- function(object, ...)  {
 
 #' Obtain the prediction function of a regression object.
 #'
-#' @param x Object.
+#' @param object Object.
 #' @param ... Further arguments.
 #'
 #' @return A function.
 #' @export
 #'
-predict_function <- function(x, ...) {
-  UseMethod("predict_function", x)
+predict_function <- function(object, ...) {
+  UseMethod("predict_function", object)
 }
 
 

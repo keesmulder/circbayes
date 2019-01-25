@@ -136,9 +136,9 @@ predict.pn_reg_mod <- function(object, newdata, ...) {
 
 
 #' @export
-posterior_samples.pn_reg_mod <- function(x) {
-  B1 <- x$B1
-  B2 <- x$B2
+posterior_samples.pn_reg_mod <- function(object, ...) {
+  B1 <- object$B1
+  B2 <- object$B2
   colnames(B1) <- paste0(colnames(B1), "_I")
   colnames(B2) <- paste0(colnames(B2), "_II")
   cbind(B1, B2)

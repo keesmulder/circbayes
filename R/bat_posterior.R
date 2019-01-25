@@ -92,6 +92,8 @@ rinvbat <- function(n, mu = 0, kp = 1, lam = 0) {
   circrad(flexcircmix::rinvbat(n, mu, kp, lam))
 }
 
+#' @param x Angle in radians for which to evaluate the probability density.
+#' @param log Logical; whether to return the log probability density.
 #' @describeIn rinvbat Density function for Inverse Batschelet.
 #' @export
 dinvbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
@@ -105,6 +107,8 @@ dpowbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
 }
 
 
+
+#' @describeIn print
 #' @export
 print.bat_posterior_mod <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))
@@ -112,13 +116,13 @@ print.bat_posterior_mod <- function(x, digits = 3, ...) {
 
 
 #' @export
-coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
+coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(object, ...) {
   args <- list(...)
   if (identical(args[['derived']], FALSE)) {
-    coef_mat <- x$mcmc_summary[-(4:6), ]
+    coef_mat <- object$mcmc_summary[-(4:6), ]
     rownames(coef_mat) <- c("mu", "kp", "lam")
   } else {
-    coef_mat <- x$mcmc_summary[-4, ]
+    coef_mat <- object$mcmc_summary[-4, ]
     rownames(coef_mat) <- c("mu", "kp", "lam", "circ_variance", "circ_sd")
   }
   coef_mat
@@ -126,8 +130,8 @@ coef.bat_posterior_mod <- coefficients.bat_posterior_mod <- function(x, ...) {
 
 
 #' @export
-posterior_samples.bat_posterior_mod <- function(x) {
-  mat <- x$mcmc_sample[, 1:3]
+posterior_samples.bat_posterior_mod <- function(object, ...) {
+  mat <- object$mcmc_sample[, 1:3]
   colnames(mat) <- c("mu", "kp", "lam")
 
   mat

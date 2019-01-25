@@ -15,8 +15,6 @@
 #' @return Object of type \code{pn_me_reg_mod}.
 #' @export
 #'
-#' @examples
-#' pn_me_reg(th ~ ., rvm_reg(20, beta = c(.5, -.2), kp = 50))
 #'
 pn_me_reg <- function(formula,
                       data,
@@ -109,11 +107,11 @@ predict.pn_me_reg_mod <- function(object, newdata, ...) {
 
 
 #' @export
-posterior_samples.pn_me_reg_mod <- function(x) {
-  B1 <- x$B.I
-  B2 <- x$B.II
-  Beta1 <- x$Beta.I
-  Beta2 <- x$Beta.II
+posterior_samples.pn_me_reg_mod <- function(object, ...) {
+  B1 <- object$B.I
+  B2 <- object$B.II
+  Beta1 <- object$Beta.I
+  Beta2 <- object$Beta.II
 
   list(B1, B2, Beta1, Beta2)
 }

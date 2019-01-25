@@ -42,13 +42,13 @@ print.vm_dpm_mod <- function(x, digits = 3, ...) {
 
 
 #' @export
-coef.vm_dpm_mod <- coefficients.vm_dpm_mod <- function(x, ...) {
+coef.vm_dpm_mod <- coefficients.vm_dpm_mod <- function(object, ...) {
   NextMethod()
 }
 
 
 #' @export
-posterior_samples.vm_dpm_mod <- function(x) {
+posterior_samples.vm_dpm_mod <- function(object, ...) {
   NextMethod()
 }
 

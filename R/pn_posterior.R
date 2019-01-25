@@ -40,7 +40,6 @@ pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
 #' @param mu1 Mean vector component 1.
 #' @param mu2 Mean vector component 2.
 #'
-#' @param x Angle in radians for which to evaluate the probability density.
 #'
 #'
 #' @return Numeric vector of \code{n} samples from the Projected Normal disttribution,
@@ -58,8 +57,12 @@ rprojnorm <- function(n, mu1 = 1, mu2 = 1) {
   circrad(force_neg_pi_pi(th))
 }
 
+#' @param x Angle in radians for which to evaluate the probability density.
+#' @param log Logical; whether to return the log probability density.
+#'
 #' @importFrom stats pnorm
 #' @importFrom stats dnorm
+#' @describeIn rprojnorm Probability density function.
 dprojnorm <- Vectorize(function(x, mu1 = 1, mu2 = 1, log = FALSE) {
   muvec <- c(mu1, mu2)
   u    <- c(cos(x), sin(x))

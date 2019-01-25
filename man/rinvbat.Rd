@@ -25,6 +25,10 @@ give a peaked density, while negative values give flat-topped densities.}
 \item{x}{Angle in radians for which to evaluate the probability density.}
 
 \item{log}{Logical; whether to return the log probability density.}
+
+\item{x}{Angle in radians for which to evaluate the probability density.}
+
+\item{log}{Logical; whether to return the log probability density.}
 }
 \value{
 Numeric vector of \code{n} samples from the Inverse Batschelet

@@ -13,9 +13,9 @@ vm_posterior(th, prior = c(0, 0, 0), niter = 1000, ...)
 
 \method{print}{vm_posterior_mod}(x, digits = 3, ...)
 
-\method{coef}{vm_posterior_mod}(x, ...)
+\method{coef}{vm_posterior_mod}(object, ...)
 
-\method{posterior_samples}{vm_posterior_mod}(x)
+\method{posterior_samples}{vm_posterior_mod}(object, ...)
 
 \method{marg_lik}{vm_posterior_mod}(x, method = "integrate", ...)
 

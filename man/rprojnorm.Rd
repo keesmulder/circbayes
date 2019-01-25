@@ -2,9 +2,12 @@
 % Please edit documentation in R/pn_posterior.R
 \name{rprojnorm}
 \alias{rprojnorm}
+\alias{dprojnorm}
 \title{Random generation for the Projected Normal distribution.}
 \usage{
 rprojnorm(n, mu1 = 1, mu2 = 1)
+
+dprojnorm(x, mu1 = 1, mu2 = 1, log = FALSE)
 }
 \arguments{
 \item{n}{Number of values to sample.}
@@ -14,6 +17,8 @@ rprojnorm(n, mu1 = 1, mu2 = 1)
 \item{mu2}{Mean vector component 2.}
 
 \item{x}{Angle in radians for which to evaluate the probability density.}
+
+\item{log}{Logical; whether to return the log probability density.}
 }
 \value{
 Numeric vector of \code{n} samples from the Projected Normal disttribution,
@@ -22,6 +27,11 @@ Numeric vector of \code{n} samples from the Projected Normal disttribution,
 \description{
 Random generation for the Projected Normal distribution.
 }
+\section{Functions}{
+\itemize{
+\item \code{dprojnorm}: Probability density function.
+}}
+
 \examples{
 rprojnorm(40, 3, 2)
 
