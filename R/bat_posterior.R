@@ -108,7 +108,6 @@ dpowbat <- function(x, mu = 0, kp = 1, lam = 0, log = FALSE) {
 
 
 
-#' @describeIn print
 #' @export
 print.bat_posterior_mod <- function(x, digits = 3, ...) {
   print(round(coef(x), digits))

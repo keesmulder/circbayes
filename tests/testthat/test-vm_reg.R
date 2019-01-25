@@ -30,10 +30,11 @@ test_that("Posterior sampling", {
 })
 
 
-tdf <- cbind(th_df, c_fac1 = rep(factor(1:4), 5), c_fac2 = rep(factor(1:2), 10))
+tdf <- data.frame(th_df, c_fac1 = rep(factor(1:2), each = 10), c_fac2 = rep(factor(1:2), 10))
 
 test_that("Regression tests", {
-  expect_is(vm_reg(th ~ c_fac1, data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
+  mod <- vm_reg(th ~ c_fac1, data = tdf, burnin = 10, niter = 20)
+  expect_is(mod, "vm_reg_mod")
   expect_is(vm_reg(th ~ 1,      data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
   expect_is(vm_reg(th ~ .^2,    data = tdf, burnin = 10, niter = 20), "vm_reg_mod")
 })

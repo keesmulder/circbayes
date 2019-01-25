@@ -176,7 +176,7 @@ scale_y_circular <- function(...) {
 gg_inside_labels <- function(units = "degrees", nticks = 4,
                              digits = 0, limits = c(0, 2 * pi),
                              positive_labels = TRUE,
-                             r = 1, labdist = .12, ymax = NA, zoom = 1) {
+                             r = 1, labdist = .20, ymax = NA, zoom = 1) {
 
   brk_list <- breaks_circular(units = units, nticks = nticks,
                               digits = digits, limits = limits,

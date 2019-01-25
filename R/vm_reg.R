@@ -28,7 +28,7 @@ vm_reg <- function(formula,
                    ...) {
 
 
-
+  data <- as.data.frame(data)
 
   # Run von Mises regression model
   res <- circglmbayes::circGLM(formula = formula,
@@ -36,6 +36,7 @@ vm_reg <- function(formula,
                                conj_prior    = prior_b0kp,
                                bt_prior_musd = prior_btdt,
                                Q = niter, r = r, ...)
+
 
 
   res$Call <- match.call()
@@ -244,7 +245,9 @@ marg_lik.vm_reg_mod <- function(x, ...) {
   lb[delta_idx] <- -2*pi
   ub[delta_idx] <-  2*pi
 
-  bsobj <- bridgesampling::bridge_sampler(data = x$data,
+  data <- cbind(x$data_th, x$data_d, x$data_stX)
+
+  bsobj <- bridgesampling::bridge_sampler(data = data,
                                           samples = as.matrix(sam),
                                           param_types = partypes,
                                           log_posterior = x$log_posterior,

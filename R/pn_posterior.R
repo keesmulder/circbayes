@@ -86,16 +86,16 @@ print.pn_posterior_mod <- function(x, digits = 3, ...) {
 
 
 #' @export
-coef.pn_posterior_mod <- coefficients.pn_posterior_mod <- function(x, ...) {
-  coef_mat <- x$coef
+coef.pn_posterior_mod <- coefficients.pn_posterior_mod <- function(object, ...) {
+  coef_mat <- object$coef
   colnames(coef_mat) <- c("mean", "mode", "se", "2.5%", "97.5%")
   coef_mat
 }
 
 
-posterior_samples.pn_posterior_mod <- function(x) {
-  cbind(mu1 = as.numeric(x$B1),
-        mu2 = as.numeric(x$B2))
+posterior_samples.pn_posterior_mod <- function(object, ...) {
+  cbind(mu1 = as.numeric(object$B1),
+        mu2 = as.numeric(object$B2))
 }
 
 #' @export
