@@ -9,9 +9,11 @@ rprojnorm(n, mu1 = 1, mu2 = 1)
 \arguments{
 \item{n}{Number of values to sample.}
 
-\item{mu}{Mean direction.}
+\item{mu1}{Mean vector component 1.}
 
-\item{kp}{Concentration parameter.}
+\item{mu2}{Mean vector component 2.}
+
+\item{x}{Angle in radians for which to evaluate the probability density.}
 }
 \value{
 Numeric vector of \code{n} samples from the Projected Normal disttribution,

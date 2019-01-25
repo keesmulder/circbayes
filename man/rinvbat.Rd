@@ -20,7 +20,11 @@ dpowbat(x, mu = 0, kp = 1, lam = 0, log = FALSE)
 \item{kp}{Concentration parameter.}
 
 \item{lam}{Lambda, peakedness parameter, between -1 and 1. Positive values
-give a peaked density, while negative values give flat-topped densities. .}
+give a peaked density, while negative values give flat-topped densities.}
+
+\item{x}{Angle in radians for which to evaluate the probability density.}
+
+\item{log}{Logical; whether to return the log probability density.}
 }
 \value{
 Numeric vector of \code{n} samples from the Inverse Batschelet

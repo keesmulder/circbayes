@@ -78,9 +78,13 @@ vm_reg <- function(formula,
 
 #' Random generation for the von Mises distribution.
 #'
+#' Generate data from the von Mises regression model.
+#'
 #' @param n Number of values to sample.
-#' @param mu Mean direction.
-#' @param kp Concentration parameter.
+#' @param kp Residual concentration parameter.
+#' @param beta0 Circular intercept.
+#' @param beta Vector of circular continuous regression coefficients.
+#' @param delta Vector of circular categorical regression coefficients
 #'
 #' @return Numeric vector of \code{n} samples from the von Mises disttribution,
 #'   in radians.

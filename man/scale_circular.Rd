@@ -25,6 +25,9 @@ scales.}
 \item{limits}{Numeric vector; The limits of the plot. Must two numbers that
 are  \code{2*pi} apart.}
 
+\item{positive_labels}{Logical; whether to only use positive values for the
+labels.}
+
 \item{scale_function}{The scale function from ggplot to use. Either
 \code{scale_x_continuous} or \code{scale_y_continuous}. For convenience
 this option can be circumvented by directly using \code{scale_x_circular}

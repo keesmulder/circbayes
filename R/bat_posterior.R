@@ -76,7 +76,10 @@ bat_posterior <- function(th,
 #' @param mu Mean direction.
 #' @param kp Concentration parameter.
 #' @param lam Lambda, peakedness parameter, between -1 and 1. Positive values
-#'   give a peaked density, while negative values give flat-topped densities. .
+#'   give a peaked density, while negative values give flat-topped densities.
+#'
+#' @param x Angle in radians for which to evaluate the probability density.
+#' @param log Logical; whether to return the log probability density.
 #'
 #' @return Numeric vector of \code{n} samples from the Inverse Batschelet
 #'   distribution, in radians.

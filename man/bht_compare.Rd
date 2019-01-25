@@ -10,6 +10,12 @@
 bht_compare(...)
 }
 \arguments{
+\item{x}{Object of type \code{bht_comparison}.}
+
+\item{digits}{Number of digits to print.}
+
+\item{...}{Further arguments.}
+
 \item{...}{(Named) list of models.}
 }
 \value{

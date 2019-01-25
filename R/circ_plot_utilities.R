@@ -119,6 +119,8 @@ breaks_circular <- function(units = "degrees", nticks = 4,
 #'   or \code{scale_y_circular}.
 #' @param ... Additional arguments to be passed to  \code{scale_x_continuous} or
 #'   \code{scale_y_continuous}.
+#' @param positive_labels Logical; whether to only use positive values for the
+#'   labels.
 #'
 #' @return An object of type \code{ScaleContinuousPosition} that can be added to
 #'   any existing \code{ggplot}.

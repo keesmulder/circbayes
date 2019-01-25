@@ -14,9 +14,6 @@ rvmmix(n, mus = -1:1, kps = c(50, 25, 10), alphs = c(0.2, 0.2, 0.6))
 \item{kps}{Concentration parameters.}
 
 \item{alphs}{Mixture weights.}
-
-\item{lams}{Lambdas, peakedness parameter, between -1 and 1. Positive values
-give a peaked density, while negative values give flat-topped densities. .}
 }
 \value{
 Numeric vector of \code{n} samples from the Inverse Batschelet

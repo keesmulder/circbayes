@@ -9,16 +9,20 @@ rvm_reg(n, beta0 = 0, kp = 1, beta = c(1, 2), delta = c(1, -1))
 \arguments{
 \item{n}{Number of values to sample.}
 
-\item{kp}{Concentration parameter.}
+\item{beta0}{Circular intercept.}
 
-\item{mu}{Mean direction.}
+\item{kp}{Residual concentration parameter.}
+
+\item{beta}{Vector of circular continuous regression coefficients.}
+
+\item{delta}{Vector of circular categorical regression coefficients}
 }
 \value{
 Numeric vector of \code{n} samples from the von Mises disttribution,
   in radians.
 }
 \description{
-Random generation for the von Mises distribution.
+Generate data from the von Mises regression model.
 }
 \examples{
 rvm(40, 3, 2)

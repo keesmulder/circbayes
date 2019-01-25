@@ -10,7 +10,7 @@ posterior_samples(object, ...)
 \arguments{
 \item{object}{Object to extract samples from.}
 
-\item{...}{}
+\item{...}{Further arguments.}
 }
 \value{
 A matrix of posterior samples.

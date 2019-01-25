@@ -37,8 +37,11 @@ pn_posterior <- function(th, niter = 1000, thin = 1, burnin = 0, ...) {
 #' Random generation for the Projected Normal distribution.
 #'
 #' @param n Number of values to sample.
-#' @param mu Mean direction.
-#' @param kp Concentration parameter.
+#' @param mu1 Mean vector component 1.
+#' @param mu2 Mean vector component 2.
+#'
+#' @param x Angle in radians for which to evaluate the probability density.
+#'
 #'
 #' @return Numeric vector of \code{n} samples from the Projected Normal disttribution,
 #'   in radians.

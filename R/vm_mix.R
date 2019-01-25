@@ -123,8 +123,6 @@ vm_mix <- function(th,
 #' @param n Number of values to sample.
 #' @param mus Mean directions.
 #' @param kps Concentration parameters.
-#' @param lams Lambdas, peakedness parameter, between -1 and 1. Positive values
-#'   give a peaked density, while negative values give flat-topped densities. .
 #' @param alphs Mixture weights.
 #'
 #' @return Numeric vector of \code{n} samples from the Inverse Batschelet
